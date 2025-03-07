@@ -1,0 +1,7 @@
+groups:
+  - name: Minimal
+    description: Minimal group with one field
+    fields:
+      - name: value
+        type: string
+        description: A single value 

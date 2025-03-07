@@ -1,0 +1,34 @@
+options:
+  package: config
+
+groups:
+  - name: App
+    description: Application settings
+    options:
+      struct_name: CustomAppConfig
+    fields:
+      - name: debug_mode
+        type: bool
+        description: Enable debug mode
+        options:
+          name_field: IsDebug
+        default: "false"
+      - name: server_port
+        type: int
+        description: Server port
+        options:
+          name_field: Port
+        required: true
+        example: "8080"
+  - name: Database
+    description: Database settings
+    options:
+      struct_name: DBConfig
+    fields:
+      - name: connection_string
+        type: string
+        description: Database connection string
+        options:
+          name_field: URL
+        required: true
+        example: "postgres://user:pass@localhost:5432/db" 

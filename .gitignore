@@ -1,0 +1,33 @@
+# Output binaries and build directories
+bin/
+*.test
+*.out
+
+# Go-specific files
+go.work
+
+# Build and cache directories
+/.cache/
+*.log
+*.tmp
+
+# IDE and editor settings
+.idea/
+.vscode/
+
+# macOS-specific files
+.DS_Store
+.AppleDouble
+.LSOverride
+.Trash-*
+
+# Vim editor temporary files
+*.swp
+*.swo
+Session.vim
+Sessionx.vim
+
+# Miscellaneous
+*~
+
+*.generated

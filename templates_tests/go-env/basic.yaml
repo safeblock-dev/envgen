@@ -1,0 +1,39 @@
+options:
+  package: config
+
+groups:
+  - name: App
+    description: Basic application settings
+    fields:
+      - name: debug
+        type: bool
+        description: Enable debug mode
+        default: "false"
+      - name: port
+        type: int
+        description: Server port
+        required: true
+        example: "8080"
+      - name: host
+        type: string
+        description: Server host
+        default: "localhost"
+
+  - name: Database
+    description: Database connection settings
+    prefix: DB_
+    fields:
+      - name: url
+        type: string
+        description: Database connection URL
+        required: true
+        example: "postgres://user:pass@localhost:5432/db"
+      - name: log_level
+        type: LogLevel
+        description: Database logging level
+        default: "info"
+
+types:
+  - name: LogLevel
+    description: Log level for the application
+    values: [debug, info, warn, error] 

@@ -1,0 +1,29 @@
+options:
+  package: prefix
+
+groups:
+  - name: App
+    description: Application settings
+    prefix: APP_
+    fields:
+      - name: debug
+        type: bool
+        description: Enable debug mode
+        default: "false"
+      - name: port
+        type: int
+        description: Server port
+        required: true
+        example: "8080"
+  - name: Database
+    description: Database settings
+    prefix: DB_
+    fields:
+      - name: host
+        type: string
+        description: Database host
+        default: "localhost"
+      - name: port
+        type: int
+        description: Database port
+        default: "5432" 

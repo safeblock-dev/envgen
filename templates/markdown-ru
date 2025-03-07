@@ -1,0 +1,71 @@
+# Конфигурация окружения
+{{- if .Options}}{{if .Options.Description}}
+
+{{.Options.Description}}
+{{- end}}{{end}}
+{{- if .Options}}{{if .Options.Version}}
+
+> Версия: {{.Options.Version}}
+{{- end}}{{end}}
+
+## Содержание
+
+{{- range .Groups}}
+- [{{.Name}}](#{{snake .Name | lower}}){{if .Description}} - {{.Description}}{{end}}
+{{- end}}
+
+{{- range .Groups}}
+{{- $prefix := .Prefix}}
+
+## {{.Name}}
+{{- if .Description}}
+
+{{.Description}}
+{{- end}}
+{{- if .Prefix}}
+
+> Префикс переменных окружения: `{{.Prefix}}`
+{{- end}}
+
+| Переменная | Тип | По умолчанию | Обязательная | Описание |
+|------------|-----|--------------|--------------|-----------|
+{{- range .Fields}}
+| `{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}` | `{{.Type}}` | {{if .Default}}`{{.Default}}`{{else}}-{{end}} | {{if .Required}}Да{{else}}Нет{{end}} | {{if .Description}}{{.Description}}{{else}}-{{end}} |
+{{- end}}
+{{- if .Fields}}
+
+### Пример
+
+```bash
+{{- range .Fields}}
+{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}={{if .Example}}{{.Example}}{{else}}{{if .Default}}{{.Default}}{{else}}"value"{{end}}{{end}}
+{{- end}}
+```
+{{- end}}
+{{- end}}
+
+## Использование
+
+1. Создайте файл `.env` в корне проекта
+2. Скопируйте необходимые переменные из примеров выше
+3. Установите нужные значения
+
+Пример:
+
+```bash
+# Копируем пример конфигурации
+cp .env.example .env
+
+# Редактируем значения
+nano .env
+```
+
+## Генерация документации
+
+Эта документация была сгенерирована автоматически с помощью [envgen](https://github.com/safeblock-dev/envgen).
+
+Для обновления документации используйте:
+
+```bash
+go run cmd/envgen/main.go -config {{getConfigPath}} -out {{getOutputPath}} -template {{getTemplatePath}}
+``` 

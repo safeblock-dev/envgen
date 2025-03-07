@@ -1,0 +1,72 @@
+# Environment Configuration
+{{- if .Options}}{{if .Options.Description}}
+
+{{.Options.Description}}
+{{- end}}{{end}}
+{{- if .Options}}{{if .Options.Version}}
+
+> Version: {{.Options.Version}}
+{{- end}}{{end}}
+
+## Table of Contents
+
+{{- range .Groups}}
+- [{{.Name}}](#{{snake .Name | lower}}){{if .Description}} - {{.Description}}{{end}}
+{{- end}}
+
+{{- range .Groups}}
+{{- $prefix := .Prefix}}
+
+## {{.Name}}
+{{- if .Description}}
+
+{{.Description}}
+{{- end}}
+{{- if .Prefix}}
+
+> Environment variables prefix: `{{.Prefix}}`
+{{- end}}
+
+| Variable | Type | Default | Required | Description | Values |
+|----------|------|---------|----------|-------------|---------|
+{{- range .Fields}}
+{{- $typeInfo := findType .Type }}
+| `{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}` | `{{.Type}}` | {{if .Default}}`{{.Default}}`{{else}}-{{end}} | {{if .Required}}Yes{{else}}No{{end}} | {{if .Description}}{{.Description}}{{else}}-{{end}} | {{if $typeInfo}}{{if $typeInfo.HasValues}}{{join $typeInfo.Values ", "}}{{else}}-{{end}}{{else}}-{{end}} |
+{{- end}}
+{{- if .Fields}}
+
+### Example
+
+```bash
+{{- range .Fields}}
+{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}={{if .Example}}{{.Example}}{{else}}{{if .Default}}{{.Default}}{{else}}"value"{{end}}{{end}}
+{{- end}}
+```
+{{- end}}
+{{- end}}
+
+## Usage
+
+1. Create `.env` file in the project root
+2. Copy required variables from examples above
+3. Set appropriate values
+
+Example:
+
+```bash
+# Copy example configuration
+cp .env.example .env
+
+# Edit values
+nano .env
+```
+
+## Documentation Generation
+
+This documentation was automatically generated using [envgen](https://github.com/safeblock-dev/envgen).
+
+To update documentation use:
+
+```bash
+go run cmd/envgen/main.go -c {{getConfigPath}} -o {{getOutputPath}} -t {{getTemplatePath}}
+``` 
