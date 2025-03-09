@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -18,8 +19,8 @@ var (
 	ignoreGroups []string
 
 	// Version and build time are set during compilation.
-	version   = "dev"
-	buildTime = "unknown"
+	version   = "unknown"
+	buildTime = time.Now().Format(time.RFC3339)
 
 	// Root command represents the base command when called without any subcommands.
 	rootCmd = &cobra.Command{
