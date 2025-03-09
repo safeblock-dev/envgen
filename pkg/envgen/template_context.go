@@ -116,18 +116,6 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"findType": func(typeName string) *TypeDefinition {
 			return tc.Config.FindType(typeName)
 		},
-		"typeValues": func(typeName string) []string {
-			if t := tc.Config.FindType(typeName); t != nil {
-				return t.Values
-			}
-			return nil
-		},
-		"typeDescription": func(typeName string) string {
-			if t := tc.Config.FindType(typeName); t != nil {
-				return t.Description
-			}
-			return ""
-		},
 		"getImports": tc.getImports,
 		"typeImport": func(typeName string) string {
 			if t := tc.Config.FindType(typeName); t != nil {

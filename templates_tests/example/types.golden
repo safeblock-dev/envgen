@@ -9,11 +9,14 @@
 # Application environment [development, staging, production] (required)
 ENV=development
 
-# API endpoint URL (required)
+# API endpoint (required)
 API_URL=https://api.example.com
 
 # API request timeout
-TIMEOUT=30s
+REQUEST_TIMEOUT=30s
+
+# API response timeout
+RESPONSE_TIMEOUT=30s
 
 # List of allowed IP addresses
 ALLOWED_IPS=127.0.0.1,192.168.1.1

@@ -79,7 +79,8 @@ func (g *Group) Validate() error {
 
 // TypeDefinition describes a type and its possible values
 type TypeDefinition struct {
-	Name        string   `yaml:"name"`        // Type name
+	Name        string   `yaml:"name"`        // Name for referencing and documentation
+	Type        string   `yaml:"type"`        // Actual Go type (e.g. "string", "*url.URL", "time.Duration")
 	Import      string   `yaml:"import"`      // Import path (optional)
 	Description string   `yaml:"description"` // Type description
 	Values      []string `yaml:"values"`      // Possible values (optional)
