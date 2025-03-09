@@ -30,8 +30,8 @@ func NewTemplateContext(cfg *Config, configPath, outPath, tmplPath string) *Temp
 	}
 }
 
-// toRelativePath converts an absolute path to a relative path from the output file directory.
-func (tc *TemplateContext) toRelativePath(path string) string {
+// ToRelativePath converts an absolute path to a relative path from the output file directory.
+func (tc *TemplateContext) ToRelativePath(path string) string {
 	if !filepath.IsAbs(path) {
 		// If path is already relative, make it relative to output file
 		outDir := filepath.Dir(tc.OutPath)
@@ -98,16 +98,16 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"joinPaths":   templatefuncs.JoinPaths,   // Join path components
 
 		// File paths
-		"getConfigPath":   func() string { return tc.toRelativePath(tc.ConfigPath) }, // Path to configuration file
-		"getOutputPath":   func() string { return tc.toRelativePath(tc.OutPath) },    // Path to output file
-		"getTemplatePath": func() string { return tc.toRelativePath(tc.TmplPath) },   // Path to template file
+		"getConfigPath":   func() string { return tc.ToRelativePath(tc.ConfigPath) }, // Path to configuration file
+		"getOutputPath":   func() string { return tc.ToRelativePath(tc.OutPath) },    // Path to output file
+		"getTemplatePath": func() string { return tc.ToRelativePath(tc.TmplPath) },   // Path to template file
 
 		// Configuration helpers
-		"hasOption": tc.hasOption,
+		"hasOption": tc.HasOption,
 
 		// Type helpers
 		"findType":   tc.Config.FindType,
-		"getImports": tc.getImports,
+		"getImports": tc.GetImports,
 		"typeImport": func(typeName string) string {
 			if t := tc.Config.FindType(typeName); t != nil {
 				return t.Import
@@ -118,9 +118,9 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 	}
 }
 
-// hasOption checks if any field in the groups has a non-empty value for the specified option.
+// HasOption checks if any field in the groups has a non-empty value for the specified option.
 // This is used to conditionally include sections in templates based on field options.
-func (tc *TemplateContext) hasOption(groups []Group, option string) bool {
+func (tc *TemplateContext) HasOption(groups []Group, option string) bool {
 	for _, group := range groups {
 		for _, field := range group.Fields {
 			if field.Options[option] != "" {
@@ -132,8 +132,8 @@ func (tc *TemplateContext) hasOption(groups []Group, option string) bool {
 	return false
 }
 
-// getImports returns a list of unique imports from type definitions that are used in fields.
-func (tc *TemplateContext) getImports() []string {
+// GetImports returns a list of unique imports from type definitions that are used in fields.
+func (tc *TemplateContext) GetImports() []string {
 	// Early return if no types defined
 	if len(tc.Config.Types) == 0 {
 		return nil
