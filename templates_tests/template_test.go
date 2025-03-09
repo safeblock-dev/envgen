@@ -24,16 +24,16 @@ func TestTemplates(t *testing.T) {
 		{
 			name:       "example/basic",
 			configFile: "example/basic.yaml",
-			goldenFile: "example/basic.golden",
+			goldenFile: "example/basic.env",
 			template:   "../templates/example",
 			outputFile: "example/basic.generated",
 		},
 		{
 			name:       "go-env/basic",
 			configFile: "go-env/basic.yaml",
-			goldenFile: "go-env/basic.golden",
+			goldenFile: "go-env/basic/basic.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/basic.generated",
+			outputFile: "go-env/basic/basic.generated",
 		},
 		{
 			name:       "markdown/basic",
@@ -46,16 +46,16 @@ func TestTemplates(t *testing.T) {
 		{
 			name:       "example/minimal",
 			configFile: "example/minimal.yaml",
-			goldenFile: "example/minimal.golden",
+			goldenFile: "example/minimal.env",
 			template:   "../templates/example",
 			outputFile: "example/minimal.generated",
 		},
 		{
 			name:       "go-env/minimal",
 			configFile: "go-env/minimal.yaml",
-			goldenFile: "go-env/minimal.golden",
+			goldenFile: "go-env/minimal/minimal.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/minimal.generated",
+			outputFile: "go-env/minimal/minimal.generated",
 		},
 		{
 			name:       "markdown/minimal",
@@ -68,16 +68,16 @@ func TestTemplates(t *testing.T) {
 		{
 			name:       "example/types",
 			configFile: "example/types.yaml",
-			goldenFile: "example/types.golden",
+			goldenFile: "example/types.env",
 			template:   "../templates/example",
 			outputFile: "example/types.generated",
 		},
 		{
 			name:       "go-env/types",
 			configFile: "go-env/types.yaml",
-			goldenFile: "go-env/types.golden",
+			goldenFile: "go-env/types/types.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/types.generated",
+			outputFile: "go-env/types/types.generated",
 		},
 		{
 			name:       "markdown/types",
@@ -90,16 +90,16 @@ func TestTemplates(t *testing.T) {
 		{
 			name:       "example/prefix",
 			configFile: "example/prefix.yaml",
-			goldenFile: "example/prefix.golden",
+			goldenFile: "example/prefix.env",
 			template:   "../templates/example",
 			outputFile: "example/prefix.generated",
 		},
 		{
 			name:       "go-env/prefix",
 			configFile: "go-env/prefix.yaml",
-			goldenFile: "go-env/prefix.golden",
+			goldenFile: "go-env/prefix/prefix.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/prefix.generated",
+			outputFile: "go-env/prefix/prefix.generated",
 		},
 		{
 			name:       "markdown/prefix",
@@ -112,9 +112,9 @@ func TestTemplates(t *testing.T) {
 		{
 			name:       "go-env/options",
 			configFile: "go-env/options.yaml",
-			goldenFile: "go-env/options.golden",
+			goldenFile: "go-env/options/options.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/options.generated",
+			outputFile: "go-env/options/options.generated",
 		},
 		{
 			name:       "markdown/options",
