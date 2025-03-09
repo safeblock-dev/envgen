@@ -13,6 +13,8 @@ var (
 	configPath   string
 	outputPath   string
 	templatePath string
+	ignoreTypes  []string
+	ignoreGroups []string
 
 	// Version and build time are set during compilation
 	version   = "dev"
@@ -26,19 +28,14 @@ var (
 It supports multiple output formats and templates, making it easy to maintain
 consistent configuration across different projects.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Validate required flags
-			if configPath == "" {
-				return fmt.Errorf("config path is required")
-			}
-			if outputPath == "" {
-				return fmt.Errorf("output path is required")
-			}
-			if templatePath == "" {
-				return fmt.Errorf("template path is required")
-			}
-
 			// Generate configuration
-			if err := envgen.Generate(configPath, outputPath, templatePath); err != nil {
+			if err := envgen.Generate(envgen.GenerateOptions{
+				ConfigPath:   configPath,
+				OutputPath:   outputPath,
+				TemplatePath: templatePath,
+				IgnoreTypes:  ignoreTypes,
+				IgnoreGroups: ignoreGroups,
+			}); err != nil {
 				return err
 			}
 
@@ -62,6 +59,8 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "Path to input YAML configuration file (required)")
 	rootCmd.PersistentFlags().StringVarP(&outputPath, "out", "o", "", "Path to output file (required)")
 	rootCmd.PersistentFlags().StringVarP(&templatePath, "template", "t", "", "Path to template file or URL (required)")
+	rootCmd.PersistentFlags().StringSliceVar(&ignoreTypes, "ignore-types", nil, "Comma-separated list of types to ignore")
+	rootCmd.PersistentFlags().StringSliceVar(&ignoreGroups, "ignore-groups", nil, "Comma-separated list of groups to ignore")
 
 	// Add version subcommand
 	rootCmd.AddCommand(versionCmd)
@@ -72,6 +71,9 @@ func init() {
 
   # Generate using template from URL
   envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
+
+  # Generate ignoring specific types and groups
+  envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
 
   # Show version
   envgen version`

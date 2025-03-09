@@ -9,19 +9,43 @@ import (
 	"text/template"
 )
 
+// GenerateOptions contains options for the Generate function
+type GenerateOptions struct {
+	// ConfigPath is the path to the YAML configuration file
+	ConfigPath string
+	// OutputPath is the path where the generated file will be written
+	OutputPath string
+	// TemplatePath is the path to the template file
+	TemplatePath string
+	// IgnoreTypes is a list of type names to ignore during generation
+	IgnoreTypes []string
+	// IgnoreGroups is a list of group names to ignore during generation
+	IgnoreGroups []string
+}
+
+// Validate checks if all required options are set
+func (opts *GenerateOptions) Validate() error {
+	if opts.ConfigPath == "" {
+		return fmt.Errorf("config path is required")
+	}
+	if opts.OutputPath == "" {
+		return fmt.Errorf("output path is required")
+	}
+	if opts.TemplatePath == "" {
+		return fmt.Errorf("template path is required")
+	}
+	return nil
+}
+
 // Generate generates code based on configuration and template.
-// Parameters:
-//   - configPath: Path to the YAML configuration file
-//   - outPath: Output path for generated files (package name defaults to directory name)
-//   - templatePath: Path to the template file (embedded or filesystem)
-func Generate(configPath, outPath, templatePath string) error {
-	// Validate input parameters
-	if err := validateInputs(configPath, outPath, templatePath); err != nil {
-		return fmt.Errorf("invalid input parameters: %w", err)
+func Generate(opts GenerateOptions) error {
+	// Validate options
+	if err := opts.Validate(); err != nil {
+		return fmt.Errorf("invalid options: %w", err)
 	}
 
 	// Read and parse configuration
-	cfg, err := LoadConfig(configPath)
+	cfg, err := LoadConfig(opts.ConfigPath)
 	if err != nil {
 		return fmt.Errorf("failed to load config: %w", err)
 	}
@@ -31,32 +55,21 @@ func Generate(configPath, outPath, templatePath string) error {
 		return fmt.Errorf("invalid configuration: %w", err)
 	}
 
+	// Filter out ignored types and groups
+	cfg.FilterTypes(opts.IgnoreTypes)
+	cfg.FilterGroups(opts.IgnoreGroups)
+
 	// Create output directory if needed
-	if err := os.MkdirAll(filepath.Dir(outPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(opts.OutputPath), 0755); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 
 	// Create template context
-	ctx := NewTemplateContext(cfg, configPath, outPath, templatePath)
+	ctx := NewTemplateContext(cfg, opts.ConfigPath, opts.OutputPath, opts.TemplatePath)
 
 	// Generate code
 	if err := generateCode(ctx); err != nil {
 		return fmt.Errorf("failed to generate code: %w", err)
-	}
-
-	return nil
-}
-
-// validateInputs validates input parameters
-func validateInputs(configPath, outPath, templatePath string) error {
-	if configPath == "" {
-		return fmt.Errorf("config path is required")
-	}
-	if outPath == "" {
-		return fmt.Errorf("output path is required")
-	}
-	if templatePath == "" {
-		return fmt.Errorf("template path is required")
 	}
 
 	return nil

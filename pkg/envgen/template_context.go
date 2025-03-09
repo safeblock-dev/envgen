@@ -2,6 +2,7 @@ package envgen
 
 import (
 	"path/filepath"
+	"sort"
 	"strings"
 	"text/template"
 	"time"
@@ -139,25 +140,45 @@ func (tc *TemplateContext) hasOption(groups []Group, option string) bool {
 	return false
 }
 
-// getImports returns a list of unique imports from type definitions
+// getImports returns a list of unique imports from type definitions that are used in fields
 func (tc *TemplateContext) getImports() []string {
+	// Early return if no types defined
 	if len(tc.Config.Types) == 0 {
 		return nil
 	}
 
-	seen := make(map[string]struct{}, len(tc.Config.Types))
-	imports := make([]string, 0, len(tc.Config.Types))
-
+	// Create a map of type names to their imports for O(1) lookup
+	typeImports := make(map[string]string, len(tc.Config.Types))
 	for _, t := range tc.Config.Types {
-		if t.Import == "" {
-			continue
-		}
-
-		if _, exists := seen[t.Import]; !exists {
-			seen[t.Import] = struct{}{}
-			imports = append(imports, t.Import)
+		if t.Import != "" {
+			typeImports[t.Name] = t.Import
 		}
 	}
+
+	// Use map to store unique imports
+	uniqueImports := make(map[string]struct{})
+
+	// Collect imports from used types
+	for _, group := range tc.Config.Groups {
+		for _, field := range group.Fields {
+			if imp, exists := typeImports[field.Type]; exists {
+				uniqueImports[imp] = struct{}{}
+			}
+		}
+	}
+
+	// Convert unique imports to slice
+	if len(uniqueImports) == 0 {
+		return nil
+	}
+
+	imports := make([]string, 0, len(uniqueImports))
+	for imp := range uniqueImports {
+		imports = append(imports, imp)
+	}
+
+	// Sort imports for consistent output
+	sort.Strings(imports)
 
 	return imports
 }

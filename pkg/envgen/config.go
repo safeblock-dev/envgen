@@ -118,6 +118,46 @@ func (c *Config) FindType(typeName string) *TypeDefinition {
 	return nil
 }
 
+// FilterTypes removes ignored types from the configuration
+func (c *Config) FilterTypes(ignoreTypes []string) {
+	if len(ignoreTypes) == 0 {
+		return
+	}
+
+	ignoreSet := make(map[string]struct{}, len(ignoreTypes))
+	for _, typeName := range ignoreTypes {
+		ignoreSet[typeName] = struct{}{}
+	}
+
+	filtered := make([]TypeDefinition, 0, len(c.Types))
+	for _, t := range c.Types {
+		if _, ignored := ignoreSet[t.Name]; !ignored {
+			filtered = append(filtered, t)
+		}
+	}
+	c.Types = filtered
+}
+
+// FilterGroups removes ignored groups from the configuration
+func (c *Config) FilterGroups(ignoreGroups []string) {
+	if len(ignoreGroups) == 0 {
+		return
+	}
+
+	ignoreSet := make(map[string]struct{}, len(ignoreGroups))
+	for _, groupName := range ignoreGroups {
+		ignoreSet[groupName] = struct{}{}
+	}
+
+	filtered := make([]Group, 0, len(c.Groups))
+	for _, g := range c.Groups {
+		if _, ignored := ignoreSet[g.Name]; !ignored {
+			filtered = append(filtered, g)
+		}
+	}
+	c.Groups = filtered
+}
+
 // HasValues checks if the type has predefined values
 func (t *TypeDefinition) HasValues() bool {
 	return len(t.Values) > 0
