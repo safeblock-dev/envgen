@@ -12,7 +12,7 @@ import (
 //
 //	fields:
 //	  - name: port             # Required: Environment variable name
-//	    type: int              # Required: Go type (any valid Go type including custom types)
+//	    type: int              # Required: Field type (built-in or custom type)
 //	    description: Port      # Optional: Field description
 //	    default: "8080"        # Optional: Default value
 //	    required: true         # Optional: Whether the field is required
@@ -21,16 +21,17 @@ import (
 //	      import: "custom/pkg" # Optional: Import path for custom types
 //	      name_field: Port     # Optional: Override struct field name
 type Field struct {
-	Name        string            `yaml:"name"`        // Environment variable name
-	Description string            `yaml:"description"` // Field description
-	Type        string            `yaml:"type"`        // Go type of the field (can be any valid Go type)
-	Default     string            `yaml:"default"`     // Default value
-	Required    bool              `yaml:"required"`    // Whether the field is required
-	Example     string            `yaml:"example"`     // Example value
-	Options     map[string]string `yaml:"options"`     // Field-specific options
+	Name        string            `yaml:"name"`        // Required: Environment variable name
+	Type        string            `yaml:"type"`        // Required: Field type (built-in or custom type)
+	Description string            `yaml:"description"` // Optional: Field description
+	Default     string            `yaml:"default"`     // Optional: Default value
+	Required    bool              `yaml:"required"`    // Optional: Whether the field is required
+	Example     string            `yaml:"example"`     // Optional: Example value for documentation
+	Options     map[string]string `yaml:"options"`     // Optional: Field-specific options (import, name_field, etc)
 }
 
-// Validate validates the field configuration
+// Validate validates the field configuration.
+// Returns an error if required fields are missing.
 func (f *Field) Validate() error {
 	if f.Name == "" {
 		return fmt.Errorf("field name is required")
@@ -50,18 +51,19 @@ func (f *Field) Validate() error {
 //	    prefix: APP_             # Optional: Environment variable prefix
 //	    options:                 # Optional: Additional options
 //	      struct_name: AppConfig # Optional: Override struct name
-//	    fields:                  # Required: List of fields
+//	    fields:                  # Required: At least one field must be defined
 //	      - name: port
 //	        type: int
 type Group struct {
-	Name        string            `yaml:"name"`        // Group name
-	Description string            `yaml:"description"` // Group description
-	Prefix      string            `yaml:"prefix"`      // Environment variable prefix (optional)
-	Options     map[string]string `yaml:"options"`     // Group-specific options
-	Fields      []Field           `yaml:"fields"`      // List of fields
+	Name        string            `yaml:"name"`        // Required: Group name
+	Description string            `yaml:"description"` // Optional: Group description
+	Prefix      string            `yaml:"prefix"`      // Optional: Environment variable prefix
+	Options     map[string]string `yaml:"options"`     // Optional: Group-specific options (struct_name, etc)
+	Fields      []Field           `yaml:"fields"`      // Required: At least one field must be defined
 }
 
-// Validate validates the group configuration
+// Validate validates the group configuration.
+// Returns an error if required fields are missing or if any field is invalid.
 func (g *Group) Validate() error {
 	if g.Name == "" {
 		return fmt.Errorf("group name is required")
@@ -77,38 +79,44 @@ func (g *Group) Validate() error {
 	return nil
 }
 
-// TypeDefinition describes a type and its possible values
+// TypeDefinition describes a type and its possible values.
+// Example:
+//
+//	types:
+//	  - name: LogLevel                      # Required: Type name for referencing in fields
+//	    type: zerolog.Level                 # Required: Type definition (built-in or custom)
+//	    description: Log level              # Optional: Type description
+//	    import: "github.com/rs/zerolog/log" # Optional: Import path for custom types
+//	    values: [debug, info, no]           # Optional: Possible values for documentation
 type TypeDefinition struct {
-	Name        string   `yaml:"name"`        // Name for referencing and documentation
-	Type        string   `yaml:"type"`        // Actual Go type (e.g. "string", "*url.URL", "time.Duration")
-	Import      string   `yaml:"import"`      // Import path (optional)
-	Description string   `yaml:"description"` // Type description
-	Values      []string `yaml:"values"`      // Possible values (optional)
+	Name        string   `yaml:"name"`        // Required: Type name for referencing in fields
+	Type        string   `yaml:"type"`        // Required: Type definition (built-in or custom)
+	Import      string   `yaml:"import"`      // Optional: Import path for custom types
+	Description string   `yaml:"description"` // Optional: Type description
+	Values      []string `yaml:"values"`      // Optional: Possible values for documentation
 }
 
 // Config represents the complete generation configuration.
 // Example:
 //
-//		options: # Optional: template-specific options
-//	   		...
-//		types:               # Optional: Type definitions
-//		  - name: LogLevel
-//		    description: Log level
-//		    values: [debug, info, warn, error]
-//		groups:               # Required: List of groups
-//		  - name: App
-//		    fields:
-//		      - name: log_level # Required: Field name
-//		        type: LogLevel # Required: Type name
-//	         options: # Optional: template-specific options
-//	           ...
+//	options:                    # Optional: Template-specific options
+//	  go_package: config       # Optional: Go package name
+//	types:                     # Optional: Type definitions
+//	  - name: LogLevel        # Required: Type name for referencing in fields
+//	    type: zerolog.Level   # Required: Type definition
+//	groups:                    # Required: At least one group must be defined
+//	  - name: App             # Required: Group name
+//	    fields:               # Required: At least one field must be defined
+//	      - name: log_level   # Required: Field name
+//	        type: LogLevel    # Required: Field type
 type Config struct {
-	Options map[string]string `yaml:"options"` // Template-specific options
-	Types   []TypeDefinition  `yaml:"types"`   // Type definitions
-	Groups  []Group           `yaml:"groups"`  // List of groups
+	Options map[string]string `yaml:"options"` // Optional: Template-specific options
+	Types   []TypeDefinition  `yaml:"types"`   // Optional: Type definitions
+	Groups  []Group           `yaml:"groups"`  // Required: At least one group must be defined
 }
 
-// FindType finds a type definition by name
+// FindType finds a type definition by name.
+// Returns nil if the type is not found.
 func (c *Config) FindType(typeName string) *TypeDefinition {
 	for _, t := range c.Types {
 		if t.Name == typeName {
@@ -118,7 +126,8 @@ func (c *Config) FindType(typeName string) *TypeDefinition {
 	return nil
 }
 
-// FilterTypes removes ignored types from the configuration
+// FilterTypes removes ignored types from the configuration.
+// If ignoreTypes is empty, no filtering is performed.
 func (c *Config) FilterTypes(ignoreTypes []string) {
 	if len(ignoreTypes) == 0 {
 		return
@@ -138,7 +147,8 @@ func (c *Config) FilterTypes(ignoreTypes []string) {
 	c.Types = filtered
 }
 
-// FilterGroups removes ignored groups from the configuration
+// FilterGroups removes ignored groups from the configuration.
+// If ignoreGroups is empty, no filtering is performed.
 func (c *Config) FilterGroups(ignoreGroups []string) {
 	if len(ignoreGroups) == 0 {
 		return
@@ -158,12 +168,14 @@ func (c *Config) FilterGroups(ignoreGroups []string) {
 	c.Groups = filtered
 }
 
-// HasValues checks if the type has predefined values
+// HasValues checks if the type has predefined values.
+// Returns true if the type has at least one value defined.
 func (t *TypeDefinition) HasValues() bool {
 	return len(t.Values) > 0
 }
 
-// Validate validates the configuration
+// Validate validates the configuration.
+// Returns an error if required fields are missing or if any group is invalid.
 func (c *Config) Validate() error {
 	if len(c.Groups) == 0 {
 		return fmt.Errorf("at least one group is required")
@@ -179,7 +191,8 @@ func (c *Config) Validate() error {
 	return nil
 }
 
-// LoadConfig loads and parses configuration from file
+// LoadConfig loads and parses configuration from file.
+// Returns an error if the file cannot be read or parsed.
 func LoadConfig(path string) (*Config, error) {
 	data, err := os.ReadFile(path)
 	if err != nil {
