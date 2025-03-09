@@ -28,6 +28,14 @@ func TestTemplates(t *testing.T) {
 	t.Parallel()
 
 	tests := []testCase{
+		// URL template test
+		{
+			name:       "go-env/url",
+			configFile: "go-env/url.yaml",
+			goldenFile: "go-env/url/url.go",
+			template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
+			outputFile: "go-env/url/url.generated",
+		},
 		// Basic tests
 		{
 			name:       "example/basic",
@@ -41,7 +49,7 @@ func TestTemplates(t *testing.T) {
 			configFile: "go-env/basic.yaml",
 			goldenFile: "go-env/basic/basic.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/basic.generated",
+			outputFile: "go-env/basic/basic.generated",
 		},
 		{
 			name:       "markdown/basic",
@@ -63,7 +71,7 @@ func TestTemplates(t *testing.T) {
 			configFile: "go-env/minimal.yaml",
 			goldenFile: "go-env/minimal/minimal.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/minimal.generated",
+			outputFile: "go-env/minimal/minimal.generated",
 		},
 		{
 			name:       "markdown/minimal",
@@ -85,7 +93,7 @@ func TestTemplates(t *testing.T) {
 			configFile: "go-env/types.yaml",
 			goldenFile: "go-env/types/types.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/types.generated",
+			outputFile: "go-env/types/types.generated",
 		},
 		{
 			name:       "markdown/types",
@@ -107,7 +115,7 @@ func TestTemplates(t *testing.T) {
 			configFile: "go-env/prefix.yaml",
 			goldenFile: "go-env/prefix/prefix.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/prefix.generated",
+			outputFile: "go-env/prefix/prefix.generated",
 		},
 		{
 			name:       "markdown/prefix",
@@ -122,7 +130,7 @@ func TestTemplates(t *testing.T) {
 			configFile: "go-env/options.yaml",
 			goldenFile: "go-env/options/options.go",
 			template:   "../templates/go-env",
-			outputFile: "go-env/options.generated",
+			outputFile: "go-env/options/options.generated",
 		},
 		{
 			name:       "markdown/options",

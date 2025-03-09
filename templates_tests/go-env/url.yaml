@@ -1,0 +1,15 @@
+options:
+  go_package: urltest
+
+groups:
+  - name: App
+    description: Basic application settings
+    fields:
+      - name: debug
+        type: bool
+        description: Enable debug mode
+        default: "false"
+      - name: port
+        type: int
+        description: Server port
+        required: true 

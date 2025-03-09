@@ -32,6 +32,11 @@ func NewTemplateContext(cfg *Config, configPath, outPath, tmplPath string) *Temp
 
 // ToRelativePath converts an absolute path to a relative path from the output file directory.
 func (tc *TemplateContext) ToRelativePath(path string) string {
+	// Check if path is a URL
+	if strings.HasPrefix(path, "http://") || strings.HasPrefix(path, "https://") {
+		return path
+	}
+
 	if !filepath.IsAbs(path) {
 		// If path is already relative, make it relative to output file
 		outDir := filepath.Dir(tc.OutPath)

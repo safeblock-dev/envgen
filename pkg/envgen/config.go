@@ -89,11 +89,11 @@ func (g *Group) Validate() error {
 // Example:
 //
 //	types:
-//	  - name: LogLevel                      # Required: Type name for referencing in fields
-//	    type: zerolog.Level                 # Required: Type definition (built-in or custom)
-//	    description: Log level              # Optional: Type description
-//	    import: "github.com/rs/zerolog/log" # Optional: Import path for custom types
-//	    values: [debug, info, no]           # Optional: Possible values for documentation
+//	  - name: LogLevel                  # Required: Type name for referencing in fields
+//	    type: zerolog.Level             # Required: Type definition (built-in or custom)
+//	    description: Log level          # Optional: Type description
+//	    import: "github.com/rs/zerolog" # Optional: Import path for custom types
+//	    values: [debug, info, no]       # Optional: Possible values for documentation
 type TypeDefinition struct {
 	Name        string   `yaml:"name"`        // Required: Type name for referencing in fields
 	Type        string   `yaml:"type"`        // Required: Type definition (built-in or custom)

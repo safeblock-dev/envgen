@@ -45,6 +45,18 @@ func TestToRelativePath(t *testing.T) {
 			path:     "relative/path/to/file",
 			want:     "relative/path/to/file",
 		},
+		{
+			name:     "http url",
+			basePath: "/path/to/output.go",
+			path:     "http://example.com/template",
+			want:     "http://example.com/template",
+		},
+		{
+			name:     "https url",
+			basePath: "/path/to/output.go",
+			path:     "https://example.com/template",
+			want:     "https://example.com/template",
+		},
 	}
 
 	for _, tt := range tests {
