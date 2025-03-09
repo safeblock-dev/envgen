@@ -164,102 +164,83 @@ func TestToKebabCase(t *testing.T) {
 	}
 }
 
-func TestAppend(t *testing.T) {
+func TestStringAppend(t *testing.T) {
 	t.Parallel()
 
-	t.Run("string values", func(t *testing.T) {
-		t.Parallel()
+	tests := []struct {
+		name     string
+		slice    []string
+		value    string
+		expected []string
+	}{
+		{name: "empty slice", slice: nil, value: "test", expected: []string{"test"}},
+		{name: "non-empty slice", slice: []string{"hello"}, value: "world", expected: []string{"hello", "world"}},
+	}
 
-		tests := []struct {
-			name     string
-			slice    []any
-			value    any
-			expected []any
-		}{
-			{name: "empty slice", slice: nil, value: "test", expected: []any{"test"}},
-			{name: "non-empty slice", slice: []any{"hello"}, value: "world", expected: []any{"hello", "world"}},
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		for _, tt := range tests {
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				result := templatefuncs.Append(tt.slice, tt.value)
-				require.Equal(t, tt.expected, result)
-			})
-		}
-	})
-
-	t.Run("int values", func(t *testing.T) {
-		t.Parallel()
-
-		tests := []struct {
-			name     string
-			slice    []any
-			value    any
-			expected []any
-		}{
-			{name: "empty slice", slice: nil, value: 42, expected: []any{42}},
-			{name: "non-empty slice", slice: []any{1}, value: 2, expected: []any{1, 2}},
-		}
-
-		for _, tt := range tests {
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				result := templatefuncs.Append(tt.slice, tt.value)
-				require.Equal(t, tt.expected, result)
-			})
-		}
-	})
+			result := templatefuncs.StringAppend(tt.slice, tt.value)
+			require.Equal(t, tt.expected, result)
+		})
+	}
 }
 
-func TestUniq(t *testing.T) {
+func TestStringUniq(t *testing.T) {
 	t.Parallel()
 
-	t.Run("string values", func(t *testing.T) {
-		t.Parallel()
+	tests := []struct {
+		name     string
+		input    []string
+		expected []string
+	}{
+		{name: "empty slice", input: nil, expected: nil},
+		{name: "no duplicates", input: []string{"a", "b", "c"}, expected: []string{"a", "b", "c"}},
+		{name: "with duplicates", input: []string{"a", "b", "a", "c", "b"}, expected: []string{"a", "b", "c"}},
+	}
 
-		tests := []struct {
-			name     string
-			input    []any
-			expected []any
-		}{
-			{name: "empty slice", input: nil, expected: nil},
-			{name: "no duplicates", input: []any{"a", "b", "c"}, expected: []any{"a", "b", "c"}},
-			{name: "with duplicates", input: []any{"a", "b", "a", "c", "b"}, expected: []any{"a", "b", "c"}},
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		for _, tt := range tests {
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
+			result := templatefuncs.StringUniq(tt.input)
+			require.Equal(t, tt.expected, result)
+		})
+	}
+}
 
-				result := templatefuncs.Uniq(tt.input)
-				require.Equal(t, tt.expected, result)
-			})
-		}
-	})
+func TestStringSlice(t *testing.T) {
+	t.Parallel()
 
-	t.Run("int values", func(t *testing.T) {
-		t.Parallel()
+	tests := []struct {
+		name     string
+		input    []string
+		expected []string
+	}{
+		{
+			name:     "empty slice",
+			input:    []string{},
+			expected: []string{},
+		},
+		{
+			name:     "single element",
+			input:    []string{"test"},
+			expected: []string{"test"},
+		},
+		{
+			name:     "multiple elements",
+			input:    []string{"a", "b", "c"},
+			expected: []string{"a", "b", "c"},
+		},
+	}
 
-		tests := []struct {
-			name     string
-			input    []any
-			expected []any
-		}{
-			{name: "empty slice", input: nil, expected: nil},
-			{name: "no duplicates", input: []any{1, 2, 3}, expected: []any{1, 2, 3}},
-			{name: "with duplicates", input: []any{1, 2, 1, 3, 2}, expected: []any{1, 2, 3}},
-		}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
 
-		for _, tt := range tests {
-			t.Run(tt.name, func(t *testing.T) {
-				t.Parallel()
-
-				result := templatefuncs.Uniq(tt.input)
-				require.Equal(t, tt.expected, result)
-			})
-		}
-	})
+			result := templatefuncs.StringSlice(tt.input...)
+			require.Equal(t, tt.expected, result)
+		})
+	}
 }

@@ -19,7 +19,16 @@ import (
 type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} struct {
 	{{- range $j, $field := $group.Fields }}
 	{{- $typeInfo := findType $field.Type }}
-	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} `env:"{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}{{ if $field.Required }},required{{ end }}"{{ if $field.Default }} envDefault:"{{ $field.Default }}"{{ end }}` // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
+	{{- $prefix := default $group.Prefix "" }}
+	{{- $envTag := $field.Name | upper }}
+	{{- if $prefix }}{{ $envTag = printf "%s%s" $prefix $envTag }}{{ end }}
+	{{- $envOpts := slice $envTag }}
+	{{- if $field.Required }}{{ $envOpts = append $envOpts "required" }}{{ end }}
+	{{- if $field.Options.go_env_options }}{{ $envOpts = append $envOpts $field.Options.go_env_options }}{{ end }}
+	{{- $envTags := printf `env:"%s"` (join $envOpts ",") }}
+	{{- if $field.Default }}{{ $envTags = printf `%s envDefault:"%s"` $envTags $field.Default }}{{ end }}
+	{{- if $field.Options.go_tags }}{{ $envTags = printf `%s %s` $envTags $field.Options.go_tags }}{{ end }}
+	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} `{{ $envTags }}` // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
 	{{- end }}
 }
 {{- end }}

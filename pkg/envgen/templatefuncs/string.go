@@ -97,19 +97,19 @@ func ToKebabCase(s string) string {
 	return strings.Join(SplitWords(s), "-")
 }
 
-// Append adds a value to a slice and returns a new slice containing all elements.
-func Append(slice []any, value any) []any {
+// StringAppend adds a value to a slice and returns a new slice containing all elements.
+func StringAppend(slice []string, value string) []string {
 	return append(slice, value)
 }
 
-// Uniq removes duplicate values from a slice while preserving the original order of elements.
-func Uniq(items []any) []any {
+// StringUniq removes duplicate values from a slice while preserving the original order of elements.
+func StringUniq(items []string) []string {
 	if len(items) == 0 {
 		return nil
 	}
 
-	seen := make(map[any]bool)
-	result := make([]any, 0, len(items))
+	seen := make(map[string]bool)
+	result := make([]string, 0, len(items))
 
 	for _, item := range items {
 		if !seen[item] {
@@ -120,4 +120,9 @@ func Uniq(items []any) []any {
 	}
 
 	return result
+}
+
+// StringSlice creates a new slice from the given arguments.
+func StringSlice(args ...string) []string {
+	return args
 }

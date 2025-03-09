@@ -47,8 +47,3 @@ func ToBool(s string, def ...bool) bool {
 		return defaultVal
 	}
 }
-
-// Slice creates a new slice from the given arguments.
-func Slice(args ...string) []string {
-	return args
-}

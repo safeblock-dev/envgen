@@ -1,0 +1,43 @@
+options:
+  go_package: tags
+
+types:
+  - name: Redis
+    type: string
+    description: Redis connection string
+    example: "redis://localhost:6379"
+
+groups:
+  - name: App
+    description: Application settings with various env tags
+    prefix: APP_
+    fields:
+      - name: config_path
+        type: string
+        description: Path to config file
+        required: true
+        options:
+          go_env_options: file
+        example: "/etc/app/config.json"
+      
+      - name: api_key
+        type: string
+        description: API key that will be unset after reading
+        required: true
+        options:
+          go_env_options: unset,notEmpty
+        example: "secret-key"
+      
+      - name: tags
+        type: "[]string"
+        description: List of tags with custom separator
+        options:
+          go_tags: envSeparator:";"
+        example: "tag1;tag2;tag3"
+
+      - name: labels
+        type: "map[string]string"
+        description: Key-value labels with custom separators
+        options:
+          go_tags: envSeparator:";" envKeyValSeparator:"="
+        example: "key1=value1;key2=value2" 

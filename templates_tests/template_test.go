@@ -183,6 +183,14 @@ func TestTemplates(t *testing.T) {
 			outputFile:   "markdown/ignore.generated",
 			ignoreGroups: []string{"Webserver"},
 		},
+		// Tags tests
+		{
+			name:       "go-env/tags",
+			configFile: "go-env/tags.yaml",
+			template:   "../templates/go-env",
+			goldenFile: "go-env/tags/tags.go",
+			outputFile: "go-env/tags/tags.generated",
+		},
 	}
 
 	for _, tt := range tests {

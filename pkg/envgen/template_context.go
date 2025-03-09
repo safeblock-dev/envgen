@@ -63,9 +63,9 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"snake":  templatefuncs.ToSnakeCase,
 		"kebab":  templatefuncs.ToKebabCase,
 		"pascal": templatefuncs.ToPascalCase,
-		"append": templatefuncs.Append,
-		"uniq":   templatefuncs.Uniq,
-		"slice":  templatefuncs.Slice,
+		"append": templatefuncs.StringAppend,
+		"uniq":   templatefuncs.StringUniq,
+		"slice":  templatefuncs.StringSlice,
 
 		// Type conversions
 		"toString": templatefuncs.ToString,

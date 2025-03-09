@@ -166,38 +166,3 @@ func TestToBool(t *testing.T) {
 		})
 	}
 }
-
-func TestSlice(t *testing.T) {
-	t.Parallel()
-
-	tests := []struct {
-		name     string
-		input    []string
-		expected []string
-	}{
-		{
-			name:     "empty slice",
-			input:    []string{},
-			expected: []string{},
-		},
-		{
-			name:     "single element",
-			input:    []string{"test"},
-			expected: []string{"test"},
-		},
-		{
-			name:     "multiple elements",
-			input:    []string{"a", "b", "c"},
-			expected: []string{"a", "b", "c"},
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
-			result := templatefuncs.Slice(tt.input...)
-			require.Equal(t, tt.expected, result)
-		})
-	}
-}

@@ -243,6 +243,34 @@ The generated code uses the `env` package for parsing environment variables. Mak
 go get github.com/caarlos0/env/v11
 ```
 
+### Go Template Options
+
+The `go-env` template supports additional options for fields that control how environment variables are processed:
+
+```yaml
+fields:
+  - name: api_key
+    type: string
+    description: API key from file
+    required: true      # Global option: adds ,required tag
+    options:
+      go_file: true     # Read value from file
+      go_expand: true   # Enable environment variable expansion
+      go_init: true     # Initialize nil pointers
+      go_notEmpty: true # Error if value is empty
+      go_unset: true    # Unset environment variable after reading
+```
+
+#### Available Go Options
+
+- `go_file`: Indicates that the value should be read from the file specified by the environment variable
+- `go_expand`: Enables environment variable expansion in values (e.g., `FOO_${BAR}`)
+- `go_init`: Initializes pointers that would otherwise be nil
+- `go_notEmpty`: Returns an error if the environment variable is empty
+- `go_unset`: Unsets environment variables after they are read
+
+These options are implemented using the `github.com/caarlos0/env/v11` package tags.
+
 ## Development
 
 ### Project Structure
