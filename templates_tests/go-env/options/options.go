@@ -11,7 +11,7 @@ type CustomAppConfig struct {
 	Port int `env:"SERVER_PORT,required"` // Server port
 }
 
-// DBConfig represents Database settings
-type DBConfig struct {
+// DatabaseConfig represents Database settings
+type DatabaseConfig struct {
 	URL string `env:"CONNECTION_STRING,required"` // Database connection string
 }

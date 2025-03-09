@@ -50,7 +50,7 @@ func (f *Field) Validate() error {
 //	    description: App         # Optional: Group description
 //	    prefix: APP_             # Optional: Environment variable prefix
 //	    options:                 # Optional: Additional options
-//	      struct_name: AppConfig # Optional: Override struct name
+//	      go_name: AppConfig     # Optional: Override struct name (Go-specific)
 //	    fields:                  # Required: At least one field must be defined
 //	      - name: port
 //	        type: int
@@ -58,7 +58,7 @@ type Group struct {
 	Name        string            `yaml:"name"`        // Required: Group name
 	Description string            `yaml:"description"` // Optional: Group description
 	Prefix      string            `yaml:"prefix"`      // Optional: Environment variable prefix
-	Options     map[string]string `yaml:"options"`     // Optional: Group-specific options (struct_name, etc)
+	Options     map[string]string `yaml:"options"`     // Optional: Group-specific options (go_name, etc)
 	Fields      []Field           `yaml:"fields"`      // Required: At least one field must be defined
 }
 

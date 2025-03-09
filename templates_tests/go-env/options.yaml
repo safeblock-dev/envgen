@@ -5,7 +5,7 @@ groups:
   - name: App
     description: Application settings
     options:
-      struct_name: CustomAppConfig
+      go_name: CustomAppConfig
     fields:
       - name: debug_mode
         type: bool

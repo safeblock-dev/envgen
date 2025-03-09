@@ -122,10 +122,10 @@ Groups organize related configuration fields:
 groups:
   - name: Database     # Required: Group name
     description: Database settings # Optional: Group description
-    prefix: DB_       # Optional: Environment variable prefix
-    options:          # Optional: Group-specific options
-      struct_name: DBConfig # Optional: Override struct name
-    fields:           # Required: At least one field must be defined
+    prefix: DB_         # Optional: Environment variable prefix
+    options:            # Optional: Group-specific options
+      go_name: DBConfig # Optional: Override struct name
+    fields:             # Required: At least one field must be defined
       - name: host
         type: string
         description: Database host
