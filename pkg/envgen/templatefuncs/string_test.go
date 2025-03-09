@@ -1,9 +1,11 @@
-package templatefuncs
+package templatefuncs_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/safeblock-dev/envgen/pkg/envgen/templatefuncs"
 )
 
 func TestSplitWords(t *testing.T) {
@@ -27,7 +29,8 @@ func TestSplitWords(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := splitWords(tt.input)
+
+			result := templatefuncs.SplitWords(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -50,7 +53,8 @@ func TestTitle(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := Title(tt.input)
+
+			result := templatefuncs.Title(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -75,7 +79,8 @@ func TestToCamelCase(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToCamelCase(tt.input)
+
+			result := templatefuncs.ToCamelCase(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -100,7 +105,8 @@ func TestToPascalCase(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToPascalCase(tt.input)
+
+			result := templatefuncs.ToPascalCase(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -125,7 +131,8 @@ func TestToSnakeCase(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToSnakeCase(tt.input)
+
+			result := templatefuncs.ToSnakeCase(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -150,7 +157,8 @@ func TestToKebabCase(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToKebabCase(tt.input)
+
+			result := templatefuncs.ToKebabCase(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -161,6 +169,7 @@ func TestAppend(t *testing.T) {
 
 	t.Run("string values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			slice    []any
@@ -174,7 +183,8 @@ func TestAppend(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Append(tt.slice, tt.value)
+
+				result := templatefuncs.Append(tt.slice, tt.value)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -182,6 +192,7 @@ func TestAppend(t *testing.T) {
 
 	t.Run("int values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			slice    []any
@@ -195,7 +206,8 @@ func TestAppend(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Append(tt.slice, tt.value)
+
+				result := templatefuncs.Append(tt.slice, tt.value)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -207,6 +219,7 @@ func TestUniq(t *testing.T) {
 
 	t.Run("string values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			input    []any
@@ -220,7 +233,8 @@ func TestUniq(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Uniq(tt.input)
+
+				result := templatefuncs.Uniq(tt.input)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -228,6 +242,7 @@ func TestUniq(t *testing.T) {
 
 	t.Run("int values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			input    []any
@@ -241,7 +256,8 @@ func TestUniq(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Uniq(tt.input)
+
+				result := templatefuncs.Uniq(tt.input)
 				require.Equal(t, tt.expected, result)
 			})
 		}

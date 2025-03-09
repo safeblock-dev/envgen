@@ -1,0 +1,41 @@
+linters:
+  enable-all: true
+  disable:
+    # deprecated
+    - tenv
+
+    - wrapcheck
+    - varnamelen
+    - err113
+
+linters-settings:
+  gci:
+    sections:
+      - standard
+      - default
+      - localmodule
+
+  depguard:
+    rules:
+      main:
+        list-mode: lax
+        deny:
+          - pkg: github.com/pkg/errors
+
+  exhaustruct:
+    exclude:
+      - "^github.com/spf13/cobra.Command$"
+
+issues:
+  exclude-rules:
+    - path: "_test\\.go"
+      linters:
+        - dupl
+        - exhaustruct
+        - funlen
+        - lll
+    - path: "cmd/envgen/main\\.go"
+      linters:
+        - lll
+        - gochecknoglobals
+        - forbidigo

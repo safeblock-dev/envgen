@@ -30,16 +30,18 @@ func NewTemplateContext(cfg *Config, configPath, outPath, tmplPath string) *Temp
 	}
 }
 
-// toRelativePath converts an absolute path to a relative path from the output file directory
+// toRelativePath converts an absolute path to a relative path from the output file directory.
 func (tc *TemplateContext) toRelativePath(path string) string {
 	if !filepath.IsAbs(path) {
 		// If path is already relative, make it relative to output file
 		outDir := filepath.Dir(tc.OutPath)
+
 		rel, err := filepath.Rel(outDir, path)
 		if err == nil {
 			return rel
 		}
 	}
+
 	return path
 }
 
@@ -56,13 +58,9 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"snake":  templatefuncs.ToSnakeCase,
 		"kebab":  templatefuncs.ToKebabCase,
 		"pascal": templatefuncs.ToPascalCase,
-		"append": func(slice []interface{}, value interface{}) []interface{} {
-			return templatefuncs.Append(slice, value)
-		},
-		"uniq": func(slice []interface{}) []interface{} {
-			return templatefuncs.Uniq(slice)
-		},
-		"slice": templatefuncs.Slice,
+		"append": templatefuncs.Append,
+		"uniq":   templatefuncs.Uniq,
+		"slice":  templatefuncs.Slice,
 
 		// Type conversions
 		"toString": templatefuncs.ToString,
@@ -80,15 +78,9 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		},
 
 		// Conditional operations
-		"default": func(values ...interface{}) interface{} {
-			return templatefuncs.DefaultValue(values...)
-		},
-		"coalesce": func(values ...*interface{}) *interface{} {
-			return templatefuncs.Coalesce(values...)
-		},
-		"ternary": func(condition bool, trueVal, falseVal interface{}) interface{} {
-			return templatefuncs.Ternary(condition, trueVal, falseVal)
-		},
+		"default":  templatefuncs.DefaultValue,
+		"coalesce": templatefuncs.Coalesce,
+		"ternary":  templatefuncs.Ternary,
 
 		// String operations
 		"contains":  strings.Contains,
@@ -114,14 +106,13 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"hasOption": tc.hasOption,
 
 		// Type helpers
-		"findType": func(typeName string) *TypeDefinition {
-			return tc.Config.FindType(typeName)
-		},
+		"findType":   tc.Config.FindType,
 		"getImports": tc.getImports,
 		"typeImport": func(typeName string) string {
 			if t := tc.Config.FindType(typeName); t != nil {
 				return t.Import
 			}
+
 			return ""
 		},
 	}
@@ -137,10 +128,11 @@ func (tc *TemplateContext) hasOption(groups []Group, option string) bool {
 			}
 		}
 	}
+
 	return false
 }
 
-// getImports returns a list of unique imports from type definitions that are used in fields
+// getImports returns a list of unique imports from type definitions that are used in fields.
 func (tc *TemplateContext) getImports() []string {
 	// Early return if no types defined
 	if len(tc.Config.Types) == 0 {
@@ -149,6 +141,7 @@ func (tc *TemplateContext) getImports() []string {
 
 	// Create a map of type names to their imports for O(1) lookup
 	typeImports := make(map[string]string, len(tc.Config.Types))
+
 	for _, t := range tc.Config.Types {
 		if t.Import != "" {
 			typeImports[t.Name] = t.Import

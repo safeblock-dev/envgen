@@ -4,8 +4,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/safeblock-dev/envgen/pkg/envgen"
 	"github.com/stretchr/testify/require"
+
+	"github.com/safeblock-dev/envgen/pkg/envgen"
 )
 
 type testCase struct {
@@ -17,6 +18,11 @@ type testCase struct {
 	ignoreTypes  []string
 	ignoreGroups []string
 }
+
+const (
+	// DefaultFilePerms are the default permissions for created files.
+	DefaultFilePerms = 0o600
+)
 
 func TestTemplates(t *testing.T) {
 	t.Parallel()
@@ -172,7 +178,6 @@ func TestTemplates(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
@@ -192,8 +197,9 @@ func TestTemplates(t *testing.T) {
 
 			// Update golden file if UPDATE_GOLDEN=1
 			if os.Getenv("UPDATE_GOLDEN") == "1" {
-				err = os.WriteFile(tt.goldenFile, actual, 0644)
+				err = os.WriteFile(tt.goldenFile, actual, DefaultFilePerms)
 				require.NoError(t, err)
+
 				return
 			}
 

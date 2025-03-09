@@ -13,10 +13,11 @@ func FormatTime(t time.Time, layout string) string {
 // If all values are empty, returns the zero value.
 func DefaultValue(values ...any) any {
 	for _, v := range values {
-		if !isEmpty(v) {
+		if !IsEmpty(v) {
 			return v
 		}
 	}
+
 	return nil
 }
 
@@ -28,6 +29,7 @@ func Coalesce(values ...*any) *any {
 			return v
 		}
 	}
+
 	return nil
 }
 
@@ -37,14 +39,16 @@ func Ternary(condition bool, trueVal, falseVal any) any {
 	if condition {
 		return trueVal
 	}
+
 	return falseVal
 }
 
-// isEmpty checks if a value is considered empty
-func isEmpty(v any) bool {
+// IsEmpty checks if a value is considered empty.
+func IsEmpty(v any) bool {
 	if v == nil {
 		return true
 	}
+
 	switch val := v.(type) {
 	case string:
 		return val == ""
@@ -63,9 +67,4 @@ func isEmpty(v any) bool {
 	default:
 		return false
 	}
-}
-
-// isNil checks if a value is nil
-func isNil(v any) bool {
-	return v == nil
 }

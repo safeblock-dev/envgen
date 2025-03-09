@@ -1,9 +1,11 @@
-package templatefuncs
+package templatefuncs_test
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/safeblock-dev/envgen/pkg/envgen/templatefuncs"
 )
 
 func TestToString(t *testing.T) {
@@ -37,10 +39,10 @@ func TestToString(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToString(tt.input)
+
+			result := templatefuncs.ToString(tt.input)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -79,10 +81,10 @@ func TestToInt(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToInt(tt.input, tt.defaultVal...)
+
+			result := templatefuncs.ToInt(tt.input, tt.defaultVal...)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -156,10 +158,10 @@ func TestToBool(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := ToBool(tt.input, tt.defaultVal...)
+
+			result := templatefuncs.ToBool(tt.input, tt.defaultVal...)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -191,10 +193,10 @@ func TestSlice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := Slice(tt.input...)
+
+			result := templatefuncs.Slice(tt.input...)
 			require.Equal(t, tt.expected, result)
 		})
 	}

@@ -4,30 +4,31 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/safeblock-dev/envgen/pkg/envgen"
 	"github.com/spf13/cobra"
+
+	"github.com/safeblock-dev/envgen/pkg/envgen"
 )
 
 var (
-	// Command flags
+	// Command flags.
 	configPath   string
 	outputPath   string
 	templatePath string
 	ignoreTypes  []string
 	ignoreGroups []string
 
-	// Version and build time are set during compilation
+	// Version and build time are set during compilation.
 	version   = "dev"
 	buildTime = "unknown"
 
-	// Root command represents the base command when called without any subcommands
+	// Root command represents the base command when called without any subcommands.
 	rootCmd = &cobra.Command{
 		Use:   "envgen",
 		Short: "Environment configuration generator",
 		Long: `envgen is a tool for generating environment configuration files.
 It supports multiple output formats and templates, making it easy to maintain
 consistent configuration across different projects.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			// Generate configuration
 			if err := envgen.Generate(envgen.GenerateOptions{
 				ConfigPath:   configPath,
@@ -40,21 +41,22 @@ consistent configuration across different projects.`,
 			}
 
 			fmt.Println("Successfully generated configuration files")
+
 			return nil
 		},
 	}
 
-	// Version command prints the current version of the tool
+	// Version command prints the current version of the tool.
 	versionCmd = &cobra.Command{
 		Use:   "version",
 		Short: "Print the version number",
-		Run: func(cmd *cobra.Command, args []string) {
+		Run: func(_ *cobra.Command, _ []string) {
 			fmt.Printf("envgen version %s (built at %s)\n", version, buildTime)
 		},
 	}
 )
 
-func init() {
+func init() { //nolint: gochecknoinits
 	// Add persistent flags to the root command
 	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "Path to input YAML configuration file (required)")
 	rootCmd.PersistentFlags().StringVarP(&outputPath, "out", "o", "", "Path to output file (required)")

@@ -1,6 +1,7 @@
 package envgen
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -34,11 +35,13 @@ type Field struct {
 // Returns an error if required fields are missing.
 func (f *Field) Validate() error {
 	if f.Name == "" {
-		return fmt.Errorf("field name is required")
+		return errors.New("field name is required")
 	}
+
 	if f.Type == "" {
 		return fmt.Errorf("field type is required for field %q", f.Name)
 	}
+
 	return nil
 }
 
@@ -66,16 +69,19 @@ type Group struct {
 // Returns an error if required fields are missing or if any field is invalid.
 func (g *Group) Validate() error {
 	if g.Name == "" {
-		return fmt.Errorf("group name is required")
+		return errors.New("group name is required")
 	}
+
 	if len(g.Fields) == 0 {
 		return fmt.Errorf("at least one field is required in group %q", g.Name)
 	}
+
 	for i, field := range g.Fields {
 		if err := field.Validate(); err != nil {
 			return fmt.Errorf("invalid field %d in group %q: %w", i, g.Name, err)
 		}
 	}
+
 	return nil
 }
 
@@ -123,6 +129,7 @@ func (c *Config) FindType(typeName string) *TypeDefinition {
 			return &t
 		}
 	}
+
 	return nil
 }
 
@@ -139,11 +146,13 @@ func (c *Config) FilterTypes(ignoreTypes []string) {
 	}
 
 	filtered := make([]TypeDefinition, 0, len(c.Types))
+
 	for _, t := range c.Types {
 		if _, ignored := ignoreSet[t.Name]; !ignored {
 			filtered = append(filtered, t)
 		}
 	}
+
 	c.Types = filtered
 }
 
@@ -160,11 +169,13 @@ func (c *Config) FilterGroups(ignoreGroups []string) {
 	}
 
 	filtered := make([]Group, 0, len(c.Groups))
+
 	for _, g := range c.Groups {
 		if _, ignored := ignoreSet[g.Name]; !ignored {
 			filtered = append(filtered, g)
 		}
 	}
+
 	c.Groups = filtered
 }
 
@@ -178,16 +189,19 @@ func (t *TypeDefinition) HasValues() bool {
 // Returns an error if required fields are missing or if any group is invalid.
 func (c *Config) Validate() error {
 	if len(c.Groups) == 0 {
-		return fmt.Errorf("at least one group is required")
+		return errors.New("at least one group is required")
 	}
+
 	if c.Options == nil {
 		c.Options = make(map[string]string)
 	}
+
 	for i, group := range c.Groups {
 		if err := group.Validate(); err != nil {
 			return fmt.Errorf("invalid group %d: %w", i, err)
 		}
 	}
+
 	return nil
 }
 

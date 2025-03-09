@@ -5,14 +5,15 @@ import (
 	"unicode"
 )
 
-// splitWords splits a string into words, supporting various delimiters.
+// SplitWords splits a string into words, supporting various delimiters.
 // It handles camelCase, PascalCase, snake_case, and kebab-case.
-func splitWords(s string) []string {
+func SplitWords(s string) []string { //nolint:cyclop
 	if s == "" {
 		return nil
 	}
 
 	var words []string
+
 	var word []rune
 
 	for i, r := range s {
@@ -23,6 +24,7 @@ func splitWords(s string) []string {
 					word = nil
 				}
 			}
+
 			word = append(word, unicode.ToLower(r))
 		} else if len(word) > 0 {
 			words = append(words, string(word))
@@ -49,56 +51,58 @@ func Title(s string) string {
 	return string(r)
 }
 
-// ToCamelCase converts a string to camelCase format.
-// Example: "hello_world" -> "helloWorld"
+// Example: "hello_world" -> "helloWorld".
 func ToCamelCase(s string) string {
 	if s == "" {
 		return ""
 	}
-	words := splitWords(s)
+
+	words := SplitWords(s)
 	for i := 1; i < len(words); i++ {
 		words[i] = Title(words[i])
 	}
+
 	return strings.Join(words, "")
 }
 
-// ToPascalCase converts a string to PascalCase format.
-// Example: "hello_world" -> "HelloWorld"
+// Example: "hello_world" -> "HelloWorld".
 func ToPascalCase(s string) string {
 	if s == "" {
 		return ""
 	}
-	words := splitWords(s)
+
+	words := SplitWords(s)
 	for i := range words {
 		words[i] = Title(words[i])
 	}
+
 	return strings.Join(words, "")
 }
 
-// ToSnakeCase converts a string to snake_case format.
-// Example: "helloWorld" -> "hello_world"
+// Example: "helloWorld" -> "hello_world".
 func ToSnakeCase(s string) string {
 	if s == "" {
 		return ""
 	}
-	return strings.Join(splitWords(s), "_")
+
+	return strings.Join(SplitWords(s), "_")
 }
 
-// ToKebabCase converts a string to kebab-case format.
-// Example: "helloWorld" -> "hello-world"
+// Example: "helloWorld" -> "hello-world".
 func ToKebabCase(s string) string {
 	if s == "" {
 		return ""
 	}
-	return strings.Join(splitWords(s), "-")
+
+	return strings.Join(SplitWords(s), "-")
 }
 
-// Append adds a value to a slice and returns a new slice containing all elements
+// Append adds a value to a slice and returns a new slice containing all elements.
 func Append(slice []any, value any) []any {
 	return append(slice, value)
 }
 
-// Uniq removes duplicate values from a slice while preserving the original order of elements
+// Uniq removes duplicate values from a slice while preserving the original order of elements.
 func Uniq(items []any) []any {
 	if len(items) == 0 {
 		return nil
@@ -110,6 +114,7 @@ func Uniq(items []any) []any {
 	for _, item := range items {
 		if !seen[item] {
 			seen[item] = true
+
 			result = append(result, item)
 		}
 	}

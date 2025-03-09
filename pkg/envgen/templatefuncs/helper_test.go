@@ -1,10 +1,12 @@
-package templatefuncs
+package templatefuncs_test
 
 import (
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
+
+	"github.com/safeblock-dev/envgen/pkg/envgen/templatefuncs"
 )
 
 func TestFormatTime(t *testing.T) {
@@ -26,7 +28,8 @@ func TestFormatTime(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			result := FormatTime(tt.time, tt.layout)
+
+			result := templatefuncs.FormatTime(tt.time, tt.layout)
 			require.Equal(t, tt.expected, result)
 		})
 	}
@@ -37,6 +40,7 @@ func TestDefaultValue(t *testing.T) {
 
 	t.Run("string values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			values   []any
@@ -51,7 +55,8 @@ func TestDefaultValue(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := DefaultValue(tt.values...)
+
+				result := templatefuncs.DefaultValue(tt.values...)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -59,6 +64,7 @@ func TestDefaultValue(t *testing.T) {
 
 	t.Run("int values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name     string
 			values   []any
@@ -73,7 +79,8 @@ func TestDefaultValue(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := DefaultValue(tt.values...)
+
+				result := templatefuncs.DefaultValue(tt.values...)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -85,7 +92,9 @@ func TestCoalesce(t *testing.T) {
 
 	t.Run("string values", func(t *testing.T) {
 		t.Parallel()
+
 		var nilVal *any
+
 		emptyStr := any("")
 		valueStr := any("value")
 		emptyStrPtr := &emptyStr
@@ -105,7 +114,8 @@ func TestCoalesce(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Coalesce(tt.values...)
+
+				result := templatefuncs.Coalesce(tt.values...)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -113,7 +123,9 @@ func TestCoalesce(t *testing.T) {
 
 	t.Run("int values", func(t *testing.T) {
 		t.Parallel()
+
 		var nilVal *any
+
 		zeroInt := any(0)
 		valueInt := any(42)
 		zeroIntPtr := &zeroInt
@@ -133,7 +145,8 @@ func TestCoalesce(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Coalesce(tt.values...)
+
+				result := templatefuncs.Coalesce(tt.values...)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -145,6 +158,7 @@ func TestTernary(t *testing.T) {
 
 	t.Run("string values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name      string
 			condition bool
@@ -159,7 +173,8 @@ func TestTernary(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Ternary(tt.condition, tt.trueVal, tt.falseVal)
+
+				result := templatefuncs.Ternary(tt.condition, tt.trueVal, tt.falseVal)
 				require.Equal(t, tt.expected, result)
 			})
 		}
@@ -167,6 +182,7 @@ func TestTernary(t *testing.T) {
 
 	t.Run("int values", func(t *testing.T) {
 		t.Parallel()
+
 		tests := []struct {
 			name      string
 			condition bool
@@ -181,7 +197,8 @@ func TestTernary(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
-				result := Ternary(tt.condition, tt.trueVal, tt.falseVal)
+
+				result := templatefuncs.Ternary(tt.condition, tt.trueVal, tt.falseVal)
 				require.Equal(t, tt.expected, result)
 			})
 		}

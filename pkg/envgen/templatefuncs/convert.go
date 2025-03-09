@@ -23,6 +23,7 @@ func ToInt(s string, def ...int) int {
 	if _, err := fmt.Sscanf(s, "%d", &result); err != nil {
 		return defaultVal
 	}
+
 	return result
 }
 
@@ -47,7 +48,7 @@ func ToBool(s string, def ...bool) bool {
 	}
 }
 
-// Slice creates a new slice from the given arguments
+// Slice creates a new slice from the given arguments.
 func Slice(args ...string) []string {
 	return args
 }

@@ -1,6 +1,8 @@
 package envgen
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,7 +11,12 @@ import (
 	"text/template"
 )
 
-// GenerateOptions contains options for the Generate function
+const (
+	// DefaultDirPerms are the default permissions for created directories.
+	DefaultDirPerms = 0o755
+)
+
+// GenerateOptions contains options for the Generate function.
 type GenerateOptions struct {
 	// ConfigPath is the path to the YAML configuration file
 	ConfigPath string
@@ -23,17 +30,20 @@ type GenerateOptions struct {
 	IgnoreGroups []string
 }
 
-// Validate checks if all required options are set
+// Validate checks if all required options are set.
 func (opts *GenerateOptions) Validate() error {
 	if opts.ConfigPath == "" {
-		return fmt.Errorf("config path is required")
+		return errors.New("config path is required")
 	}
+
 	if opts.OutputPath == "" {
-		return fmt.Errorf("output path is required")
+		return errors.New("output path is required")
 	}
+
 	if opts.TemplatePath == "" {
-		return fmt.Errorf("template path is required")
+		return errors.New("template path is required")
 	}
+
 	return nil
 }
 
@@ -60,7 +70,7 @@ func Generate(opts GenerateOptions) error {
 	cfg.FilterGroups(opts.IgnoreGroups)
 
 	// Create output directory if needed
-	if err := os.MkdirAll(filepath.Dir(opts.OutputPath), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Dir(opts.OutputPath), DefaultDirPerms); err != nil {
 		return fmt.Errorf("failed to create output directory: %w", err)
 	}
 
@@ -75,7 +85,7 @@ func Generate(opts GenerateOptions) error {
 	return nil
 }
 
-// generateCode generates the final code using the template and configuration
+// generateCode generates the final code using the template and configuration.
 func generateCode(ctx *TemplateContext) error {
 	// Load template content
 	templateContent, err := LoadTemplate(ctx.TmplPath)
@@ -105,7 +115,11 @@ func generateCode(ctx *TemplateContext) error {
 
 	// Format generated code
 	if strings.HasSuffix(ctx.OutPath, ".go") {
-		if err := exec.Command("go", "fmt", ctx.OutPath).Run(); err != nil {
+		// Sanitize the path to prevent command injection
+		safePath := filepath.Clean(ctx.OutPath)
+		cmd := exec.CommandContext(context.Background(), "go", "fmt", safePath)
+
+		if err := cmd.Run(); err != nil {
 			return fmt.Errorf("failed to format generated code: %w", err)
 		}
 	}
