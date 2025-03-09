@@ -66,7 +66,7 @@ jobs:
           if [ "${{ matrix.os }}" = "windows" ]; then
             OUTPUT_FILE="$OUTPUT_FILE.exe"
           fi
-          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} CGO_ENABLED=0 make build
+          GOOS=${{ matrix.os }} GOARCH=${{ matrix.arch }} VERSION=${{ env.VERSION }} make build
           mv bin/envgen "$OUTPUT_FILE"
           echo "Generated binary: $OUTPUT_FILE"
 

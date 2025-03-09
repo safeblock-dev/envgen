@@ -1,6 +1,7 @@
 package envgen
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -119,8 +120,12 @@ func generateCode(ctx *TemplateContext) error {
 		safePath := filepath.Clean(ctx.OutPath)
 		cmd := exec.CommandContext(context.Background(), "go", "fmt", safePath)
 
+		// Capture stderr output
+		var stderr bytes.Buffer
+		cmd.Stderr = &stderr
+
 		if err := cmd.Run(); err != nil {
-			return fmt.Errorf("failed to format generated code: %w", err)
+			return fmt.Errorf("failed to format generated code: %w\nFormatting errors:\n%s", err, stderr.String())
 		}
 	}
 

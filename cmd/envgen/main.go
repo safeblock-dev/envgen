@@ -18,7 +18,7 @@ var (
 	ignoreTypes  []string
 	ignoreGroups []string
 
-	// Version and build time are set during compilation.
+	// Version is set during compilation.
 	version   = "unknown"
 	buildTime = time.Now().Format(time.RFC3339)
 
@@ -59,11 +59,16 @@ consistent configuration across different projects.`,
 
 func init() { //nolint: gochecknoinits
 	// Add persistent flags to the root command
-	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "Path to input YAML configuration file (required)")
-	rootCmd.PersistentFlags().StringVarP(&outputPath, "out", "o", "", "Path to output file (required)")
-	rootCmd.PersistentFlags().StringVarP(&templatePath, "template", "t", "", "Path to template file or URL (required)")
+	rootCmd.PersistentFlags().StringVarP(&configPath, "config", "c", "", "Path to input YAML configuration file")
+	rootCmd.PersistentFlags().StringVarP(&outputPath, "out", "o", "", "Path to output file")
+	rootCmd.PersistentFlags().StringVarP(&templatePath, "template", "t", "", "Path to template file or URL")
 	rootCmd.PersistentFlags().StringSliceVar(&ignoreTypes, "ignore-types", nil, "Comma-separated list of types to ignore")
 	rootCmd.PersistentFlags().StringSliceVar(&ignoreGroups, "ignore-groups", nil, "Comma-separated list of groups to ignore")
+
+	// Mark required flags
+	_ = rootCmd.MarkPersistentFlagRequired("config")
+	_ = rootCmd.MarkPersistentFlagRequired("out")
+	_ = rootCmd.MarkPersistentFlagRequired("template")
 
 	// Add version subcommand
 	rootCmd.AddCommand(versionCmd)
@@ -73,7 +78,7 @@ func init() { //nolint: gochecknoinits
   envgen -c config.yaml -o config.go -t ./templates/config.tmpl
 
   # Generate using template from URL
-  envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
+  envgen --c config.yaml --o config.go --t https://raw.githubusercontent.com/safeblock-dev/envgen/refs/heads/main/templates/go-env
 
   # Generate ignoring specific types and groups
   envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
@@ -84,7 +89,7 @@ func init() { //nolint: gochecknoinits
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Fprintln(os.Stderr, err)
+		fmt.Fprintln(os.Stderr, err.Error())
 		os.Exit(1)
 	}
 }

@@ -2,7 +2,7 @@
 
 # Версия приложения
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
-LDFLAGS := -X main.version=$(VERSION)
+LDFLAGS := -X 'main.version=$(VERSION)'
 
 all: lint test build
 
