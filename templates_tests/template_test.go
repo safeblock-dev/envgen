@@ -35,6 +35,13 @@ func TestTemplates(t *testing.T) {
 			template:   "../templates/go-env",
 			outputFile: "go-env/basic.generated",
 		},
+		{
+			name:       "markdown/basic",
+			configFile: "markdown/basic.yaml",
+			goldenFile: "markdown/basic.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/basic.generated",
+		},
 		// Minimal configuration tests
 		{
 			name:       "example/minimal",
@@ -49,6 +56,13 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/minimal.golden",
 			template:   "../templates/go-env",
 			outputFile: "go-env/minimal.generated",
+		},
+		{
+			name:       "markdown/minimal",
+			configFile: "markdown/minimal.yaml",
+			goldenFile: "markdown/minimal.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/minimal.generated",
 		},
 		// Custom types tests
 		{
@@ -65,6 +79,13 @@ func TestTemplates(t *testing.T) {
 			template:   "../templates/go-env",
 			outputFile: "go-env/types.generated",
 		},
+		{
+			name:       "markdown/types",
+			configFile: "markdown/types.yaml",
+			goldenFile: "markdown/types.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/types.generated",
+		},
 		// Prefix tests
 		{
 			name:       "example/prefix",
@@ -80,13 +101,27 @@ func TestTemplates(t *testing.T) {
 			template:   "../templates/go-env",
 			outputFile: "go-env/prefix.generated",
 		},
-		// Options tests (only for go-env)
+		{
+			name:       "markdown/prefix",
+			configFile: "markdown/prefix.yaml",
+			goldenFile: "markdown/prefix.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/prefix.generated",
+		},
+		// Options tests
 		{
 			name:       "go-env/options",
 			configFile: "go-env/options.yaml",
 			goldenFile: "go-env/options.golden",
 			template:   "../templates/go-env",
 			outputFile: "go-env/options.generated",
+		},
+		{
+			name:       "markdown/options",
+			configFile: "markdown/options.yaml",
+			goldenFile: "markdown/options.golden.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/options.generated",
 		},
 	}
 

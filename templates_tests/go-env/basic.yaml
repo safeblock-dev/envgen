@@ -35,5 +35,6 @@ groups:
 
 types:
   - name: LogLevel
+    type: string
     description: Log level for the application
     values: [debug, info, warn, error] 

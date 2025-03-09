@@ -1,0 +1,49 @@
+options:
+  md_title: "Application Configuration Guide"
+  md_description: |
+    This document describes all environment variables that can be used to configure the application.
+    Each variable is documented with its type, whether it's required, and its default value if any.
+
+groups:
+  - name: App
+    description: Main application settings
+    fields:
+      - name: mode
+        type: string
+        description: Application running mode
+        default: "production"
+        values: [development, staging, production]
+      - name: debug
+        type: bool
+        description: Enable debug logging
+        default: "false"
+      - name: port
+        type: int
+        description: HTTP server port
+        required: true
+        example: "8080"
+
+  - name: Database
+    description: Database connection settings
+    prefix: DB_
+    fields:
+      - name: host
+        type: string
+        description: Database host address
+        default: "localhost"
+      - name: port
+        type: int
+        description: Database port number
+        default: "5432"
+      - name: name
+        type: string
+        description: Database name
+        required: true
+      - name: user
+        type: string
+        description: Database user
+        required: true
+      - name: password
+        type: string
+        description: Database password
+        required: true 

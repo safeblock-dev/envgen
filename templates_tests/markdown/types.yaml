@@ -1,0 +1,44 @@
+types:
+  - name: Environment
+    type: string
+    description: Application environment
+    values: [development, staging, production]
+  - name: URL
+    type: "*url.URL"
+    description: URL type
+    import: "net/url"
+  - name: Duration
+    type: "time.Duration"
+    description: Duration type
+    import: "time"
+  - name: IpAddresses
+    type: "[]net.IP"
+    description: IP addresses type
+    import: "net"
+
+groups:
+  - name: App
+    description: Application settings
+    fields:
+      - name: env
+        type: Environment
+        description: Application environment
+        required: true
+        example: "development"
+      - name: api_url
+        type: URL
+        description: API endpoint
+        required: true
+        example: "https://api.example.com"
+      - name: request_timeout
+        type: Duration
+        description: API request timeout
+        default: "30s"
+      - name: response_timeout
+        type: Duration
+        description: API response timeout
+        default: "30s"
+      - name: allowed_ips
+        type: "IpAddresses"
+        description: List of allowed IP addresses
+        example: "127.0.0.1,192.168.1.1" 

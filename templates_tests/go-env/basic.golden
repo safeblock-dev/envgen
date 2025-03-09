@@ -15,5 +15,5 @@ type AppConfig struct {
 // DatabaseConfig represents Database connection settings
 type DatabaseConfig struct {
 	Url string `env:"DB_URL,required"` // Database connection URL
-	LogLevel  `env:"DB_LOG_LEVEL" envDefault:"info"` // Database logging level (Possible values: debug, info, warn, error)
+	LogLevel string `env:"DB_LOG_LEVEL" envDefault:"info"` // Database logging level (Possible values: debug, info, warn, error)
 }

@@ -1,72 +1,40 @@
-# Environment Configuration
-{{- if .Options}}{{if .Options.Description}}
+# {{ default .Options.md_title "Environment Variables Documentation" }}
 
-{{.Options.Description}}
-{{- end}}{{end}}
-{{- if .Options}}{{if .Options.Version}}
+{{- if .Options.md_description }}
 
-> Version: {{.Options.Version}}
-{{- end}}{{end}}
+{{ .Options.md_description }}
+{{- end }}
 
-## Table of Contents
+{{- range $group := .Groups }}
 
-{{- range .Groups}}
-- [{{.Name}}](#{{snake .Name | lower}}){{if .Description}} - {{.Description}}{{end}}
-{{- end}}
+## {{ $group.Name | title }}
 
-{{- range .Groups}}
-{{- $prefix := .Prefix}}
+{{ $group.Description }}
 
-## {{.Name}}
-{{- if .Description}}
+| Variable | Type | Required | Default | Description |
+|----------|------|----------|---------|-------------|
+{{- range $field := $group.Fields }}
+{{- $typeInfo := findType $field.Type }}
+| `{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}` | {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} | {{ if $field.Required }}✓{{ else }}✗{{ end }} | {{ if $field.Default }}`{{ $field.Default }}`{{ else }}-{{ end }} | {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }} |
+{{- end }}
 
-{{.Description}}
-{{- end}}
-{{- if .Prefix}}
+{{- end }}
 
-> Environment variables prefix: `{{.Prefix}}`
-{{- end}}
+{{- if .Types }}
 
-| Variable | Type | Default | Required | Description | Values |
-|----------|------|---------|----------|-------------|---------|
-{{- range .Fields}}
-{{- $typeInfo := findType .Type }}
-| `{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}` | `{{.Type}}` | {{if .Default}}`{{.Default}}`{{else}}-{{end}} | {{if .Required}}Yes{{else}}No{{end}} | {{if .Description}}{{.Description}}{{else}}-{{end}} | {{if $typeInfo}}{{if $typeInfo.HasValues}}{{join $typeInfo.Values ", "}}{{else}}-{{end}}{{else}}-{{end}} |
-{{- end}}
-{{- if .Fields}}
+## Types
 
-### Example
+{{- range $type := .Types }}
 
-```bash
-{{- range .Fields}}
-{{if $prefix}}{{$prefix}}{{end}}{{.Name | upper}}={{if .Example}}{{.Example}}{{else}}{{if .Default}}{{.Default}}{{else}}"value"{{end}}{{end}}
-{{- end}}
-```
-{{- end}}
-{{- end}}
+### {{ $type.Name }}
 
-## Usage
+{{ $type.Description }}
+{{- if $type.Values }}
 
-1. Create `.env` file in the project root
-2. Copy required variables from examples above
-3. Set appropriate values
-
-Example:
-
-```bash
-# Copy example configuration
-cp .env.example .env
-
-# Edit values
-nano .env
-```
-
-## Documentation Generation
-
-This documentation was automatically generated using [envgen](https://github.com/safeblock-dev/envgen).
-
-To update documentation use:
-
-```bash
-go run cmd/envgen/main.go -c {{getConfigPath}} -o {{getOutputPath}} -t {{getTemplatePath}}
-``` 
+Possible values:
+{{- range $value := $type.Values }}
+- `{{ $value }}`
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }} 
