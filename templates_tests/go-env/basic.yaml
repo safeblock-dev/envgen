@@ -1,5 +1,5 @@
 options:
-  package: config
+  go_package: config
 
 groups:
   - name: App

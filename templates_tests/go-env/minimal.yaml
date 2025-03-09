@@ -1,5 +1,5 @@
 options:
-  package: minimal
+  go_package: minimal
 
 groups:
   - name: Minimal

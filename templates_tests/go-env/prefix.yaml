@@ -1,5 +1,5 @@
 options:
-  package: prefix
+  go_package: prefix
 
 groups:
   - name: App

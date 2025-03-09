@@ -3,7 +3,7 @@
 
 //go:generate go run github.com/safeblock-dev/envgen/cmd/envgen -c {{ getConfigPath }} -o {{ getOutputPath }} -t {{ getTemplatePath }}
 
-package {{ default .Options.package (getDirName getOutputPath) }}
+package {{ default .Options.go_package (getDirName getOutputPath) }}
 
 {{- if $imports := getImports }}
 import (
@@ -19,7 +19,7 @@ import (
 type {{ if $group.Options.struct_name }}{{ $group.Options.struct_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} struct {
 	{{- range $j, $field := $group.Fields }}
 	{{- $typeInfo := findType $field.Type }}
-	{{ if $field.Options.name_field }}{{ $field.Options.name_field }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} `env:"{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}{{ if $field.Required }},required{{ end }}"{{ if $field.Default }} envDefault:"{{ $field.Default }}"{{ end }}` // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
+	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} `env:"{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}{{ if $field.Required }},required{{ end }}"{{ if $field.Default }} envDefault:"{{ $field.Default }}"{{ end }}` // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
 	{{- end }}
 }
 {{- end }}

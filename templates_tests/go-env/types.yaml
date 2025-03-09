@@ -1,5 +1,5 @@
 options:
-  package: types
+  go_package: types
 
 types:
   - name: Environment

@@ -1,5 +1,5 @@
 options:
-  package: config
+  go_package: config
 
 groups:
   - name: App
@@ -11,13 +11,13 @@ groups:
         type: bool
         description: Enable debug mode
         options:
-          name_field: IsDebug
+          go_name: IsDebug
         default: "false"
       - name: server_port
         type: int
         description: Server port
         options:
-          name_field: Port
+          go_name: Port
         required: true
         example: "8080"
   - name: Database
@@ -29,6 +29,6 @@ groups:
         type: string
         description: Database connection string
         options:
-          name_field: URL
+          go_name: URL
         required: true
         example: "postgres://user:pass@localhost:5432/db" 
