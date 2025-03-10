@@ -191,6 +191,30 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/tags/tags.go",
 			outputFile: "go-env/tags/tags.generated",
 		},
+		// Custom generate commands test
+		{
+			name:       "go-env/custom_generate",
+			configFile: "go-env/custom_generate.yaml",
+			template:   "../templates/go-env",
+			goldenFile: "go-env/custom_generate/config.go",
+			outputFile: "go-env/custom_generate/config.generated",
+		},
+		// Meta only test
+		{
+			name:       "go-env/meta_only",
+			configFile: "go-env/meta_only.yaml",
+			template:   "../templates/go-env",
+			goldenFile: "go-env/meta_only/config.go",
+			outputFile: "go-env/meta_only/config.generated",
+		},
+		// Generate only test
+		{
+			name:       "go-env/generate_only",
+			configFile: "go-env/generate_only.yaml",
+			template:   "../templates/go-env",
+			goldenFile: "go-env/generate_only/config.go",
+			outputFile: "go-env/generate_only/config.generated",
+		},
 	}
 
 	for _, tt := range tests {

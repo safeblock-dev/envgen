@@ -74,48 +74,44 @@ func TestHasOption(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name   string
-		groups []envgen.Group
-		option string
-		want   bool
+		name     string
+		config   *envgen.Config
+		option   string
+		expected bool
 	}{
 		{
 			name: "option exists",
-			groups: []envgen.Group{
-				{
-					Fields: []envgen.Field{
-						{
-							Options: map[string]string{
-								"test": "value",
-							},
-						},
-					},
+			config: &envgen.Config{
+				Options: map[string]string{
+					"test": "value",
 				},
 			},
-			option: "test",
-			want:   true,
+			option:   "test",
+			expected: true,
 		},
 		{
 			name: "option doesn't exist",
-			groups: []envgen.Group{
-				{
-					Fields: []envgen.Field{
-						{
-							Options: map[string]string{
-								"other": "value",
-							},
-						},
-					},
+			config: &envgen.Config{
+				Options: map[string]string{
+					"other": "value",
 				},
 			},
-			option: "test",
-			want:   false,
+			option:   "test",
+			expected: false,
 		},
 		{
-			name:   "empty groups",
-			groups: []envgen.Group{},
-			option: "test",
-			want:   false,
+			name:     "nil config",
+			config:   nil,
+			option:   "test",
+			expected: false,
+		},
+		{
+			name: "nil options",
+			config: &envgen.Config{
+				Options: nil,
+			},
+			option:   "test",
+			expected: false,
 		},
 	}
 
@@ -123,9 +119,9 @@ func TestHasOption(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			tc := envgen.NewTemplateContext(&envgen.Config{}, "", "", "")
-			got := tc.HasOption(tt.groups, tt.option)
-			require.Equal(t, tt.want, got)
+			tc := envgen.NewTemplateContext(tt.config, "", "", "")
+			got := tc.HasOption(tt.option)
+			require.Equal(t, tt.expected, got)
 		})
 	}
 }
@@ -211,10 +207,299 @@ func TestGetTemplateFuncs(t *testing.T) {
 		"ternary", "contains", "hasPrefix", "hasSuffix", "replace",
 		"trim", "join", "split", "getDirName", "getFileName", "getFileExt",
 		"joinPaths", "getConfigPath", "getOutputPath", "getTemplatePath",
-		"hasOption", "findType", "getImports", "typeImport",
+		"hasOption", "hasGroupOption", "getOption", "getGroupOption", "findType", "getImports", "typeImport",
 	}
 
 	for _, name := range requiredFuncs {
 		require.Contains(t, funcs, name, "Required function %s not found in template functions", name)
+	}
+}
+
+func TestGetOption(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		config   *envgen.Config
+		option   string
+		expected string
+	}{
+		{
+			name: "option exists",
+			config: &envgen.Config{
+				Options: map[string]string{
+					"test": "value",
+				},
+			},
+			option:   "test",
+			expected: "value",
+		},
+		{
+			name: "option doesn't exist",
+			config: &envgen.Config{
+				Options: map[string]string{
+					"other": "value",
+				},
+			},
+			option:   "test",
+			expected: "",
+		},
+		{
+			name:     "nil config",
+			config:   nil,
+			option:   "test",
+			expected: "",
+		},
+		{
+			name: "nil options",
+			config: &envgen.Config{
+				Options: nil,
+			},
+			option:   "test",
+			expected: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc := envgen.NewTemplateContext(tt.config, "", "", "")
+			got := tc.GetOption(tt.option)
+			require.Equal(t, tt.expected, got)
+		})
+	}
+}
+
+func TestProcessTemplate(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name       string
+		template   string
+		config     *envgen.Config
+		configPath string
+		outPath    string
+		tmplPath   string
+		expected   string
+	}{
+		{
+			name:       "replace all keys",
+			template:   "{{ ConfigPath }} {{ OutputPath }} {{ TemplatePath }}",
+			config:     &envgen.Config{},
+			configPath: "/path/to/config.yaml",
+			outPath:    "/path/to/output.go",
+			tmplPath:   "/path/to/template.tmpl",
+			expected:   "/path/to/config.yaml /path/to/output.go /path/to/template.tmpl",
+		},
+		{
+			name:       "no keys to replace",
+			template:   "no special keys here",
+			config:     &envgen.Config{},
+			configPath: "/path/to/config.yaml",
+			outPath:    "/path/to/output.go",
+			tmplPath:   "/path/to/template.tmpl",
+			expected:   "no special keys here",
+		},
+		{
+			name:       "empty template",
+			template:   "",
+			config:     &envgen.Config{},
+			configPath: "/path/to/config.yaml",
+			outPath:    "/path/to/output.go",
+			tmplPath:   "/path/to/template.tmpl",
+			expected:   "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc := envgen.NewTemplateContext(tt.config, tt.configPath, tt.outPath, tt.tmplPath)
+			got := tc.ProcessTemplate(tt.template)
+			require.Equal(t, tt.expected, got)
+		})
+	}
+}
+
+func TestHasGroupOption(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		config   *envgen.Config
+		option   string
+		expected bool
+	}{
+		{
+			name: "option exists in field",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: map[string]string{
+									"test": "value",
+								},
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: true,
+		},
+		{
+			name: "option doesn't exist in fields",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: map[string]string{
+									"other": "value",
+								},
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: false,
+		},
+		{
+			name:     "nil config",
+			config:   nil,
+			option:   "test",
+			expected: false,
+		},
+		{
+			name: "empty groups",
+			config: &envgen.Config{
+				Groups: []envgen.Group{},
+			},
+			option:   "test",
+			expected: false,
+		},
+		{
+			name: "nil field options",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: nil,
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: false,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc := envgen.NewTemplateContext(tt.config, "", "", "")
+			got := tc.HasGroupOption(tt.option)
+			require.Equal(t, tt.expected, got)
+		})
+	}
+}
+
+func TestGetGroupOption(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name     string
+		config   *envgen.Config
+		option   string
+		expected string
+	}{
+		{
+			name: "option exists in first field",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: map[string]string{
+									"test": "value1",
+								},
+							},
+							{
+								Options: map[string]string{
+									"test": "value2",
+								},
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: "value1",
+		},
+		{
+			name: "option doesn't exist in fields",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: map[string]string{
+									"other": "value",
+								},
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: "",
+		},
+		{
+			name:     "nil config",
+			config:   nil,
+			option:   "test",
+			expected: "",
+		},
+		{
+			name: "empty groups",
+			config: &envgen.Config{
+				Groups: []envgen.Group{},
+			},
+			option:   "test",
+			expected: "",
+		},
+		{
+			name: "nil field options",
+			config: &envgen.Config{
+				Groups: []envgen.Group{
+					{
+						Fields: []envgen.Field{
+							{
+								Options: nil,
+							},
+						},
+					},
+				},
+			},
+			option:   "test",
+			expected: "",
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			tc := envgen.NewTemplateContext(tt.config, "", "", "")
+			got := tc.GetGroupOption(tt.option)
+			require.Equal(t, tt.expected, got)
+		})
 	}
 }

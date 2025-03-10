@@ -108,7 +108,11 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 		"getTemplatePath": func() string { return tc.ToRelativePath(tc.TmplPath) },   // Path to template file
 
 		// Configuration helpers
-		"hasOption": tc.HasOption,
+		"hasOption":       tc.HasOption,
+		"hasGroupOption":  tc.HasGroupOption,
+		"getOption":       tc.GetOption,
+		"getGroupOption":  tc.GetGroupOption,
+		"processTemplate": tc.ProcessTemplate,
 
 		// Type helpers
 		"findType":   tc.Config.FindType,
@@ -123,12 +127,26 @@ func (tc *TemplateContext) GetTemplateFuncs() template.FuncMap {
 	}
 }
 
-// HasOption checks if any field in the groups has a non-empty value for the specified option.
+// HasOption checks if the specified option exists in the configuration.
+// This is used to conditionally include sections in templates based on configuration options.
+func (tc *TemplateContext) HasOption(option string) bool {
+	if tc.Config == nil || tc.Config.Options == nil {
+		return false
+	}
+
+	return tc.Config.Options[option] != ""
+}
+
+// HasGroupOption checks if any field in the groups has a non-empty value for the specified option.
 // This is used to conditionally include sections in templates based on field options.
-func (tc *TemplateContext) HasOption(groups []Group, option string) bool {
-	for _, group := range groups {
+func (tc *TemplateContext) HasGroupOption(option string) bool {
+	if tc.Config == nil {
+		return false
+	}
+
+	for _, group := range tc.Config.Groups {
 		for _, field := range group.Fields {
-			if field.Options[option] != "" {
+			if field.Options != nil && field.Options[option] != "" {
 				return true
 			}
 		}
@@ -179,4 +197,47 @@ func (tc *TemplateContext) GetImports() []string {
 	sort.Strings(imports)
 
 	return imports
+}
+
+// GetOption returns the value of the specified option from the configuration.
+// If the option is not found, returns an empty string.
+func (tc *TemplateContext) GetOption(option string) string {
+	if tc.Config == nil || tc.Config.Options == nil {
+		return ""
+	}
+
+	return tc.Config.Options[option]
+}
+
+// GetGroupOption returns the value of the specified option from the first field that has it.
+// If no field has the option, returns an empty string.
+func (tc *TemplateContext) GetGroupOption(option string) string {
+	if tc.Config == nil {
+		return ""
+	}
+
+	for _, group := range tc.Config.Groups {
+		for _, field := range group.Fields {
+			if field.Options != nil {
+				if value, ok := field.Options[option]; ok {
+					return value
+				}
+			}
+		}
+	}
+
+	return ""
+}
+
+// ProcessTemplate processes a template string by replacing special keys with their values.
+// Special keys are:
+// - {{.ConfigPath}} - Path to configuration file
+// - {{.OutputPath}} - Path to output file
+// - {{.TemplatePath}} - Path to template file
+func (tc *TemplateContext) ProcessTemplate(template string) string {
+	template = strings.ReplaceAll(template, "{{ ConfigPath }}", tc.ToRelativePath(tc.ConfigPath))
+	template = strings.ReplaceAll(template, "{{ OutputPath }}", tc.ToRelativePath(tc.OutPath))
+	template = strings.ReplaceAll(template, "{{ TemplatePath }}", tc.ToRelativePath(tc.TmplPath))
+	
+	return template
 }
