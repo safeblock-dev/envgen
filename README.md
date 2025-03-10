@@ -1,19 +1,28 @@
 # envgen
 
-`envgen` is a flexible tool for generating environment configuration code. It creates type-safe configuration structures and documentation from YAML definitions.
+**`envgen` – A powerful tool for generating environment configuration from YAML**
+
+Creates type-safe Go structures, `.env.example` files, documentation, and any other files using custom templates.
+
+[Russian Documentation (Русская версия)](README.ru.md)
+
+### Advantages
+
+- 🔒 **Type Safety**: Type validation at compile time
+- 🔄 **Automatic Generation**: Documentation and examples are always synchronized with code
+- 🎨 **Any Template**: Support for custom templates and formats
+- 🛠 **Flexible Configuration**: Simple settings for customization
+- 📝 **Auto-documentation**: Automatically generated Markdown documentation
+- 🔍 **Transparency**: Clear configuration structure in YAML format
 
 ## Features
 
 - Multiple output formats:
   - Go structures with `env` tags
-  - Environment file templates
-  - Markdown documentation
-- Type system with custom type definitions
-- Group-based configuration organization
-- Environment variable prefix support
-- Customizable templates
-- Type and group filtering for composite configurations
-- Extended validation and error reporting
+  - Environment file examples (`.env.example`)
+  - Documentation in Markdown format
+- Configurable templates
+- Support for custom templates
 
 ## Installation
 
@@ -27,7 +36,7 @@ go install github.com/safeblock-dev/envgen/cmd/envgen@latest
 ```yaml
 # Example configuration for Go package generation
 options:
-  go_package: myapp/config  # Package name for generated code
+  go_package: config  # Package name for generated code
 
 types:
   - name: Environment
@@ -54,14 +63,12 @@ groups:
         type: string
         description: Server host
         default: "localhost"
-        required: true
         example: "0.0.0.0"
       
       - name: env
         type: Environment
         description: Environment
         default: "development"
-        required: true
         example: "production"
 ```
 
@@ -82,37 +89,33 @@ The tool supports the following flags:
 
 Examples:
 ```bash
-# Generate using local template
+# Generation using local template
 envgen -c config.yaml -o config.go -t ./templates/config.tmpl
 
-# Generate using template from URL
+# Generation using template from URL
 envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
 
-# Generate ignoring specific types and groups
+# Generation ignoring specific types and groups
 envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
 
 # Show version
 envgen version
 ```
 
-This will create a `config.go` file with type-safe structures for configuration management. The generated code will use environment variables with the `SERVER_` prefix (e.g., `SERVER_PORT`, `SERVER_HOST`, `SERVER_ENV`).
+This will create a `config.go` file with type-safe structures for configuration handling. The generated code will use environment variables with the `SERVER_` prefix (e.g., `SERVER_PORT`, `SERVER_HOST`, `SERVER_ENV`).
 
 ## Configuration Format
 
-### Types
+### Options
 
-Types allow defining custom types with validation and documentation:
+Options allow you to customize and modify information in the template. Different templates use different options.
 
 ```yaml
-types:
-  - name: Duration      # Required: Type name for referencing in fields
-    type: time.Duration # Required: Type definition (built-in or custom)
-    import: time       # Optional: Import path for custom types
-    description: Time interval # Optional: Type description
-    values:           # Optional: Possible values for documentation
-      - 1s
-      - 1m
+options:
+  go_package: mypkg
 ```
+
+This example shows an option that sets the package name for the `go-env` template. You can also set options in a group and in individual fields.
 
 ### Groups
 
@@ -120,12 +123,12 @@ Groups organize related configuration fields:
 
 ```yaml
 groups:
-  - name: Database     # Required: Group name
-    description: Database settings # Optional: Group description
-    prefix: DB_         # Optional: Environment variable prefix
-    options:            # Optional: Group-specific options
-      go_name: DBConfig # Optional: Override struct name
-    fields:             # Required: At least one field must be defined
+  - name: Database     # Required: group name
+    description: Database settings # Optional: group description
+    prefix: DB_         # Optional: prefix for environment variables
+    options:            # Optional: group parameters
+      go_name: DBConfig # Optional: any template option
+    fields:             # Required: at least one field must be defined
       - name: host
         type: string
         description: Database host
@@ -139,22 +142,82 @@ Fields represent individual environment variables:
 
 ```yaml
 fields:
-  - name: port        # Required: Environment variable name
-    type: int        # Required: Field type (built-in or custom)
-    description: Port # Optional: Field description
-    default: "8080"  # Optional: Default value
-    required: true   # Optional: Whether the field is required
-    example: "9000"  # Optional: Example value for documentation
-    options:         # Optional: Field-specific options
-      import: "custom/pkg" # Optional: Import path for custom types
-      name_field: Port    # Optional: Override struct field name
+  - name: url                   # Required: environment variable name
+    type: string                # Required: field type (built-in or custom)
+    description: API endpoint   # Optional: field description
+    default: "http://127.0.0.1" # Optional: default value
+    required: true              # Optional: whether the field is required
+    example: "http://test.com"  # Optional: example value for documentation
+    options:                    # Optional: additional field parameters
+      go_name: "URL"            # Optional: any template option
+```
+
+### Types
+
+Types allow you to define custom types, add context to a type, and reuse them:
+
+```yaml
+types:
+  - name: Duration        # Required: type name for field references
+    type: time.Duration   # Required: type definition (built-in or custom)
+    import: time          # Optional: import path for custom types
+    description: Interval # Optional: type description
+    values:               # Optional: possible values for documentation
+      - 1s
+      - 1m
+```
+
+You can create multiple similar types:
+
+```yaml
+types:
+  - name: AppENV
+    type: string
+    description: Environment name
+    values: ["prod", "dev"]
+  - name: MediaURL
+    type: string
+    description: Media source link
+```
+
+To use created types, specify their name as the type value in the field description:
+
+```yaml
+fields:
+  - name: github                  
+    type: AppURL                # Specify type name
+    example: "http://github.com/safeblock-dev" 
+  - name: twitter                  
+    type: AppURL                # Type can be used multiple times
+    example: "http://x.com/safeblock" 
+```
+
+The following special keys are available in options:
+- `{{ ConfigPath }}` - outputs the path to the configuration file
+- `{{ OutputPath }}` - outputs the path to the output file
+- `{{ TemplatePath }}` - outputs the path to the template
+
+Special options are also available for groups and fields:
+
+```yaml
+groups:
+  - name: App
+    description: Application settings
+    options:
+      go_name: CustomAppConfig
+    fields:
+      - name: debug_mode
+        type: bool
+        description: Enable debug mode
+        options:
+          go_name: IsDebug
 ```
 
 ## Advanced Features
 
 ### Composite Configurations
 
-You can use groups as types and filter them during generation:
+You can ignore types and groups during generation:
 
 ```yaml
 groups:
@@ -190,6 +253,8 @@ Generate only database configurations:
 envgen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
 ```
 
+This is especially useful when you have structures that you don't want to show, for example, in `.env.example`.
+
 ### Templates
 
 The tool includes three built-in templates:
@@ -211,65 +276,76 @@ envgen -c config.yaml -o .env.example -t example
 envgen -c config.yaml -o config.md -t markdown
 ```
 
-### Using Generated Code
+### Go Template Options
 
-After generating the code, you can use it in your Go application:
+The `go-env` template supports global options:
+
+```yaml
+options:
+  go_package: config # Required field
+  go_generate: |
+    # Generate configuration
+    //go:generate envgen -c {{ ConfigPath }} -o {{ OutputPath }} -t {{ TemplatePath }}
+    # Generate documentation
+    //go:generate envgen -c {{ ConfigPath }} -o docs/{{ OutputPath }} -t markdown
+  go_meta: |
+    // Version: v0.1.2
+    // Template: {{ TemplatePath }}
+```
+
+The `go_package` option is required for the `go-env` template. If not specified, `envgen` will try to use the folder name from the `out` flag, but this is considered bad practice since if the path is something like `config.go`, the package name will be set to `.`.
+
+The `go_generate` option lets you specify custom code generation commands. If not specified, the default command is used.
+
+The `go_meta` option adds additional information after the `go_generate` block.
+
+The following special keys are available in options:
+- `{{ ConfigPath }}` - outputs the path to the configuration file
+- `{{ OutputPath }}` - outputs the path to the output file
+- `{{ TemplatePath }}` - outputs the path to the template
+
+Special options are also available for groups and fields:
+
+```yaml
+groups:
+  - name: App
+    description: Application settings
+    options:
+      go_name: CustomAppConfig
+    fields:
+      - name: debug_mode
+        type: bool
+        description: Enable debug mode
+        options:
+          go_name: IsDebug
+```
+
+Result:
 
 ```go
-package main
-
-import (
-    "fmt"
-    "log"
-    "os"
-
-    "myapp/config"
-)
-
-func main() {
-    var cfg config.ServerConfig
-    if err := env.Parse(&cfg); err != nil {
-        log.Fatal(err)
-    }
-
-    fmt.Printf("Server will start on %s:%d\n", cfg.Host, cfg.Port)
-    fmt.Printf("Environment: %s\n", cfg.Env)
+// App name changed to CustomAppConfig
+type CustomAppConfig struct {
+   // DebugMode name (debug_mode in config file) changed to IsDebug
+	IsDebug bool `env:"DEBUG_MODE" envDefault:"false"`
 }
 ```
 
-The generated code uses the `env` package for parsing environment variables. Make sure to add it to your dependencies:
+### Markdown Template Options
 
-```bash
-go get github.com/caarlos0/env/v11
-```
-
-### Go Template Options
-
-The `go-env` template supports additional options for fields that control how environment variables are processed:
+The `markdown` template supports global options:
 
 ```yaml
-fields:
-  - name: api_key
-    type: string
-    description: API key from file
-    required: true      # Global option: adds ,required tag
-    options:
-      go_file: true     # Read value from file
-      go_expand: true   # Enable environment variable expansion
-      go_init: true     # Initialize nil pointers
-      go_notEmpty: true # Error if value is empty
-      go_unset: true    # Unset environment variable after reading
+options:
+  md_title: Markdown File Title
+  md_description: |
+    Any additional description
 ```
 
-#### Available Go Options
+These options are additional and not required.
 
-- `go_file`: Indicates that the value should be read from the file specified by the environment variable
-- `go_expand`: Enables environment variable expansion in values (e.g., `FOO_${BAR}`)
-- `go_init`: Initializes pointers that would otherwise be nil
-- `go_notEmpty`: Returns an error if the environment variable is empty
-- `go_unset`: Unsets environment variables after they are read
+### Example Template Options
 
-These options are implemented using the `github.com/caarlos0/env/v11` package tags.
+The template does not use any special options.
 
 ## Development
 
@@ -277,15 +353,15 @@ These options are implemented using the `github.com/caarlos0/env/v11` package ta
 
 ```
 .
-├── cmd/envgen/          # CLI application
-├── pkg/envgen/          # Core package
-│   ├── config.go        # Configuration types and validation
-│   ├── envgen.go        # Main generation logic
-│   ├── template.go      # Template loading
+├── cmd/envgen/             # CLI application
+├── pkg/envgen/             # Main package
+│   ├── config.go           # Configuration types and validation
+│   ├── envgen.go           # Main generation logic
+│   ├── template.go         # Template loading
 │   ├── template_context.go # Template context and functions
-│   └── templatefuncs/   # Template helper functions
-├── templates/           # Built-in templates
-└── templates_tests/     # Tests and examples
+│   └── templatefuncs/      # Template helper functions
+├── templates/              # Built-in templates
+└── templates_tests/        # Tests and examples
 ```
 
 ### Running Tests
@@ -299,6 +375,132 @@ Update golden files for template tests:
 UPDATE_GOLDEN=1 go test ./templates_tests
 ```
 
+## Frequently Asked Questions
+
+### How to Add a Custom Template?
+
+Create a template file with `.tmpl` or `.tpl` extension. Use Go templates syntax and available context functions. Example of a simple template:
+
+```go
+// File: custom.tmpl
+{{- range $group := .Groups }}
+# {{ $group.Description }}
+{{- range $field := $group.Fields }}
+{{ $field.Name | upper }}={{ $field.Default }}  # {{ $field.Description }}
+{{- end }}
+
+{{- end }}
+```
+
+Generate using template:
+```bash
+envgen -c config.yaml -o custom.txt -t ./custom.tmpl
+```
+
+The result will look like this:
+```ini
+# Web server settings
+PORT=8080  # Server port
+HOST=localhost  # Server host
+ENV=development  # Environment
+
+# Database settings
+DB_HOST=localhost  # Database host
+DB_PORT=5432  # Database port
+```
+
+### How to Use Custom Types?
+
+1. Define type in configuration:
+```yaml
+types:
+  - name: CustomType
+    type: your/pkg.Type
+    import: your/pkg
+```
+
+2. Use it in fields:
+```yaml
+fields:
+  - name: custom_field
+    type: CustomType
+```
+
+### What Functions are Available in Templates?
+
+The following built-in functions are available in templates:
+
+- String manipulation functions:
+  - `title` - convert first letter to uppercase
+  - `upper` - convert to uppercase
+  - `lower` - convert to lowercase
+  - `pascal` - convert to PascalCase
+  - `camel` - convert to camelCase
+  - `snake` - convert to snake_case
+  - `kebab` - convert to kebab-case
+  - `append` - append string to end
+  - `uniq` - remove duplicates
+  - `slice` - get substring
+  - `contains` - check for substring
+  - `hasPrefix` - check prefix
+  - `hasSuffix` - check suffix
+  - `replace` - replace substring
+  - `trim` - remove whitespace
+  - `join` - join strings
+  - `split` - split string
+
+- Type manipulation functions:
+  - `toString` - convert to string
+  - `toInt` - convert to integer
+  - `toBool` - convert to boolean
+  - `findType` - find type information
+  - `getImports` - get import list
+  - `typeImport` - get type import
+
+- Date and time functions:
+  - `now` - current time
+  - `formatTime` - format time
+  - `date` - current date (YYYY-MM-DD)
+  - `datetime` - current date and time (YYYY-MM-DD HH:MM:SS)
+
+- Conditional operations:
+  - `default` - default value
+  - `coalesce` - first non-empty value
+  - `ternary` - ternary operator
+  - `hasOption` - check option existence
+  - `hasGroupOption` - check group option existence
+  - `getOption` - get option value
+  - `getGroupOption` - get group option value
+
+- Path manipulation functions:
+  - `getDirName` - get directory name
+  - `getFileName` - get file name
+  - `getFileExt` - get file extension
+  - `joinPaths` - join paths
+  - `getConfigPath` - path to configuration file
+  - `getOutputPath` - path to output file
+  - `getTemplatePath` - path to template file
+
+Usage example:
+```go
+{{ $name := "my_variable" }}
+{{ $name | pascal }}  // Result: MyVariable
+{{ $name | upper }}   // Result: MY_VARIABLE
+
+{{ if hasOption "go_package" }}
+package {{ getOption "go_package" }}
+{{ end }}
+
+// Date and time operations
+{{ datetime }}  // Result: 2024-03-21 15:04:05
+
+// Conditional operations
+{{ $value := "test" | default "default_value" }}
+
+// Path operations
+{{ $dir := getFileName "/path/to/file.txt" }}  // Result: file.txt
+```
+
 ## License
 
-MIT
+MIT 

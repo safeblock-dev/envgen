@@ -232,12 +232,12 @@ func (tc *TemplateContext) GetGroupOption(option string) string {
 // ProcessTemplate processes a template string by replacing special keys with their values.
 // Special keys are:
 // - {{.ConfigPath}} - Path to configuration file
-// - {{.OutputPath}} - Path to output file
-// - {{.TemplatePath}} - Path to template file
+// - {{.OutputPath}} - Path to output file.
+// - {{.TemplatePath}} - Path to template file.
 func (tc *TemplateContext) ProcessTemplate(template string) string {
 	template = strings.ReplaceAll(template, "{{ ConfigPath }}", tc.ToRelativePath(tc.ConfigPath))
 	template = strings.ReplaceAll(template, "{{ OutputPath }}", tc.ToRelativePath(tc.OutPath))
 	template = strings.ReplaceAll(template, "{{ TemplatePath }}", tc.ToRelativePath(tc.TmplPath))
-	
+
 	return template
 }
