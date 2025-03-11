@@ -22,19 +22,11 @@
 
 {{- if .Types }}
 
-## Types
+## Custom Types
 
+| Type | Import Path | Description | Possible Values |
+|------|------------|-------------|-----------------|
 {{- range $type := .Types }}
-
-### {{ $type.Name }}
-
-{{ $type.Description }}
-{{- if $type.Values }}
-
-Possible values:
-{{- range $value := $type.Values }}
-- `{{ $value }}`
-{{- end }}
-{{- end }}
+| `{{ $type.Name }}` | {{ if $type.Import }}`{{ $type.Import }}`{{ else }}-{{ end }} | {{ $type.Description }} | {{ if $type.Values }}{{ range $i, $value := $type.Values }}{{ if $i }}, {{ end }}`{{ $value }}`{{ end }}{{ else }}-{{ end }} |
 {{- end }}
 {{- end }} 

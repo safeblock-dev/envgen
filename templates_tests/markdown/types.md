@@ -12,25 +12,11 @@ Application settings
 | `RESPONSE_TIMEOUT` | time.Duration | ✗ | `30s` | - | API response timeout |
 | `ALLOWED_IPS` | []net.IP | ✗ | - | `127.0.0.1,192.168.1.1` | List of allowed IP addresses |
 
-## Types
+## Custom Types
 
-### Environment
-
-Application environment
-
-Possible values:
-- `development`
-- `staging`
-- `production`
-
-### URL
-
-URL type
-
-### Duration
-
-Duration type
-
-### IpAddresses
-
-IP addresses type 
+| Type | Import Path | Description | Possible Values |
+|------|------------|-------------|-----------------|
+| `Environment` | - | Application environment | `development`, `staging`, `production` |
+| `URL` | `net/url` | URL type | - |
+| `Duration` | `time` | Duration type | - |
+| `IpAddresses` | `net` | IP addresses type | - | 
