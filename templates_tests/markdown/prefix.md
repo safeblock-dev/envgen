@@ -4,16 +4,16 @@
 
 Application settings
 
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `APP_DEBUG` | bool | ✗ | `false` | Enable debug mode |
-| `APP_PORT` | int | ✓ | - | Server port |
+| Variable | Type | Required | Default | Example | Description |
+|----------|------|----------|---------|---------|-------------|
+| `APP_DEBUG` | bool | ✗ | `false` | - | Enable debug mode |
+| `APP_PORT` | int | ✓ | - | `8080` | Server port |
 
 ## Database
 
 Database settings
 
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `DB_HOST` | string | ✗ | `localhost` | Database host |
-| `DB_PORT` | int | ✗ | `5432` | Database port | 
+| Variable | Type | Required | Default | Example | Description |
+|----------|------|----------|---------|---------|-------------|
+| `DB_HOST` | string | ✗ | `localhost` | - | Database host |
+| `DB_PORT` | int | ✗ | `5432` | - | Database port | 

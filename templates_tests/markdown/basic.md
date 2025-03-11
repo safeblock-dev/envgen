@@ -4,20 +4,20 @@
 
 Basic application settings
 
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `DEBUG` | bool | ✗ | `false` | Enable debug mode |
-| `PORT` | int | ✓ | - | Server port |
-| `HOST` | string | ✗ | `localhost` | Server host |
+| Variable | Type | Required | Default | Example | Description |
+|----------|------|----------|---------|---------|-------------|
+| `DEBUG` | bool | ✗ | `false` | - | Enable debug mode |
+| `PORT` | int | ✓ | - | `8080` | Server port |
+| `HOST` | string | ✗ | `localhost` | - | Server host |
 
 ## Database
 
 Database connection settings
 
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
-| `DB_URL` | string | ✓ | - | Database connection URL |
-| `DB_LOG_LEVEL` | string | ✗ | `info` | Database logging level (Possible values: debug, info, warn, error) |
+| Variable | Type | Required | Default | Example | Description |
+|----------|------|----------|---------|---------|-------------|
+| `DB_URL` | string | ✓ | - | `postgres://user:pass@localhost:5432/db` | Database connection URL |
+| `DB_LOG_LEVEL` | string | ✗ | `info` | - | Database logging level (Possible values: debug, info, warn, error) |
 
 ## Types
 

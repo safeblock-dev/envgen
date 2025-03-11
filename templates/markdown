@@ -11,11 +11,11 @@
 
 {{ $group.Description }}
 
-| Variable | Type | Required | Default | Description |
-|----------|------|----------|---------|-------------|
+| Variable | Type | Required | Default | Example | Description |
+|----------|------|----------|---------|---------|-------------|
 {{- range $field := $group.Fields }}
 {{- $typeInfo := findType $field.Type }}
-| `{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}` | {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} | {{ if $field.Required }}✓{{ else }}✗{{ end }} | {{ if $field.Default }}`{{ $field.Default }}`{{ else }}-{{ end }} | {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }} |
+| `{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}` | {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} | {{ if $field.Required }}✓{{ else }}✗{{ end }} | {{ if $field.Default }}`{{ $field.Default }}`{{ else }}-{{ end }} | {{ if $field.Example }}`{{ $field.Example }}`{{ else }}-{{ end }} | {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }} |
 {{- end }}
 
 {{- end }}
