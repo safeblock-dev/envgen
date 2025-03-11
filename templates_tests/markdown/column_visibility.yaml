@@ -1,0 +1,44 @@
+options:
+    # Hide specific columns in the groups table
+  md_groups_hide_type: true        # Hide Type column
+  md_groups_hide_required: true    # Hide Required column
+  md_groups_hide_default: true     # Hide Default column
+  md_groups_hide_example: true     # Hide Example column
+  md_groups_hide_description: true # Hide Description column
+
+  # Hide specific columns in the types table
+  md_types_hide_import: true       # Hide Import column
+  md_types_hide_description: true  # Hide Description column
+  md_types_hide_values: true       # Hide Possible Values column
+
+types:
+  - name: LogLevel
+    description: Уровень логирования
+    values: ["debug", "info", "warn", "error"]
+    import: "github.com/example/pkg/log"
+
+  - name: MetricsFormat
+    description: Формат метрик
+    values: ["prometheus", "influx"]
+    import: "github.com/example/pkg/metrics"
+
+groups:
+  - name: Logger
+    description: Настройки логирования
+    type: LoggerConfig
+    fields:
+      - name: level
+        type: LogLevel
+        description: Уровень логирования для приложения
+        required: true
+        default: "info"
+
+  - name: App
+    description: Основные настройки приложения
+    type: AppConfig
+    fields:
+      - name: metrics_format
+        type: MetricsFormat
+        description: Формат экспорта метрик
+        required: false
+        default: "prometheus" 

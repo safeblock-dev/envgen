@@ -1,27 +1,39 @@
 options:
-  md_title: "Application Configuration Guide"
+  md_title: Application Environment Configuration
   md_description: |
-    This document describes all environment variables that can be used to configure the application.
-    Each variable is documented with its type, whether it's required, and its default value if any.
+    This document describes all environment variables used in the application.
+    Please ensure all required variables are properly set before running the application.
+    For local development, you can use the provided `.env.example` file as a template.
+  md_types_title: Custom Environment Types
+  md_types_description: |
+    The following section describes custom types used in the configuration.
+    These types provide additional validation and documentation for specific environment variables.
+    Each type includes its possible values.
+
+types:
+  - name: Environment
+    type: string
+    description: Application environment
+    values: [development, staging, production]
 
 groups:
   - name: App
     description: Main application settings
     fields:
       - name: mode
-        type: string
+        type: Environment
         description: Application running mode
-        default: "production"
-        values: [development, staging, production]
+        example: production
+        default: production
       - name: debug
         type: bool
         description: Enable debug logging
-        default: "false"
+        default: false
       - name: port
         type: int
         description: HTTP server port
         required: true
-        example: "8080"
+        example: 8080
 
   - name: Database
     description: Database connection settings
@@ -30,11 +42,11 @@ groups:
       - name: host
         type: string
         description: Database host address
-        default: "localhost"
+        default: localhost
       - name: port
         type: int
         description: Database port number
-        default: "5432"
+        default: 5432
       - name: name
         type: string
         description: Database name

@@ -411,7 +411,22 @@ The `markdown` template supports global options:
 options:
   md_title: Markdown File Title
   md_description: |
-    Any additional description
+    Additional description at the top of the page
+  md_types_title: Types Section Title
+  md_types_description: |
+    Additional descript
+
+  # Hide specific columns in the groups table
+  md_groups_hide_type: true        # Hide Type column
+  md_groups_hide_required: true    # Hide Required column
+  md_groups_hide_default: true     # Hide Default column
+  md_groups_hide_example: true     # Hide Example column
+  md_groups_hide_description: true # Hide Description column
+
+  # Hide specific columns in the types table
+  md_types_hide_import: true       # Hide Import column
+  md_types_hide_description: true  # Hide Description column
+  md_types_hide_values: true       # Hide Possible Values column
 ```
 
 These options are additional and not required.

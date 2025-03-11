@@ -179,7 +179,7 @@ func TestTemplates(t *testing.T) {
 			name:         "markdown/ignore",
 			configFile:   "markdown/ignore.yaml",
 			goldenFile:   "markdown/ignore.md",
-			template:     "../templates/example",
+			template:     "../templates/markdown",
 			outputFile:   "markdown/ignore.generated",
 			ignoreGroups: []string{"Webserver"},
 		},
@@ -222,6 +222,13 @@ func TestTemplates(t *testing.T) {
 			template:   "../templates/go-env",
 			goldenFile: "go-env/skip_env_tag/skip_env_tag.go",
 			outputFile: "go-env/skip_env_tag/skip_env_tag.generated",
+		},
+		{
+			name:       "markdown/column_visibility",
+			configFile: "markdown/column_visibility.yaml",
+			template:   "../templates/markdown",
+			goldenFile: "markdown/column_visibility.md",
+			outputFile: "markdown/column_visibility.generated",
 		},
 	}
 
