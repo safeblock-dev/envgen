@@ -237,7 +237,8 @@ envgen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
 Инструмент включает три встроенных шаблона:
 
 - `go-env`: Генерирует Go-структуры с тегами `env`
-- `example`: Создает шаблоны файлов `.env`
+- `go-env-example`: Создает `.env.example` шаблоны с учетом `go-env` тегов (опций)
+- `example`: Создает `.env.example` шаблоны
 - `markdown`: Создает документацию в формате Markdown
 
 Примеры использования встроенных шаблонов:

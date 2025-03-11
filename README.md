@@ -239,7 +239,8 @@ This is especially useful when you have structures that you don't want to show, 
 The tool includes three built-in templates:
 
 - `go-env`: Generates Go structs with `env` tags
-- `example`: Creates `.env` file templates
+- `go-env-example`: Creates `.env.example` templates considering `go-env` tags (options)
+- `example`: Creates `.env.example` templates
 - `markdown`: Creates Markdown documentation
 
 Examples of using built-in templates:

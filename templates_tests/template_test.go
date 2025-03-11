@@ -28,7 +28,9 @@ func TestTemplates(t *testing.T) {
 	t.Parallel()
 
 	tests := []testCase{
-		// URL template test
+		// --------------------------------
+		// URL template tests
+		// --------------------------------
 		{
 			name:       "go-env/url",
 			configFile: "go-env/url.yaml",
@@ -36,7 +38,10 @@ func TestTemplates(t *testing.T) {
 			template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
 			outputFile: "go-env/url/url.generated",
 		},
-		// Basic tests
+
+		// --------------------------------
+		// Example template tests (.env)
+		// --------------------------------
 		{
 			name:       "example/basic",
 			configFile: "example/basic.yaml",
@@ -45,26 +50,44 @@ func TestTemplates(t *testing.T) {
 			outputFile: "example/basic.generated",
 		},
 		{
-			name:       "go-env/basic",
-			configFile: "go-env/basic.yaml",
-			goldenFile: "go-env/basic/basic.go",
-			template:   "../templates/go-env",
-			outputFile: "go-env/basic/basic.generated",
-		},
-		{
-			name:       "markdown/basic",
-			configFile: "markdown/basic.yaml",
-			goldenFile: "markdown/basic.md",
-			template:   "../templates/markdown",
-			outputFile: "markdown/basic.generated",
-		},
-		// Minimal configuration tests
-		{
 			name:       "example/minimal",
 			configFile: "example/minimal.yaml",
 			goldenFile: "example/minimal.env",
 			template:   "../templates/example",
 			outputFile: "example/minimal.generated",
+		},
+		{
+			name:       "example/types",
+			configFile: "example/types.yaml",
+			goldenFile: "example/types.env",
+			template:   "../templates/example",
+			outputFile: "example/types.generated",
+		},
+		{
+			name:       "example/prefix",
+			configFile: "example/prefix.yaml",
+			goldenFile: "example/prefix.env",
+			template:   "../templates/example",
+			outputFile: "example/prefix.generated",
+		},
+		{
+			name:         "example/ignore",
+			configFile:   "example/ignore.yaml",
+			goldenFile:   "example/ignore",
+			template:     "../templates/example",
+			outputFile:   "example/ignore.generated",
+			ignoreGroups: []string{"Webserver"},
+		},
+
+		// --------------------------------
+		// Go-env template tests (Go structs)
+		// --------------------------------
+		{
+			name:       "go-env/basic",
+			configFile: "go-env/basic.yaml",
+			goldenFile: "go-env/basic/basic.go",
+			template:   "../templates/go-env",
+			outputFile: "go-env/basic/basic.generated",
 		},
 		{
 			name:       "go-env/minimal",
@@ -74,41 +97,11 @@ func TestTemplates(t *testing.T) {
 			outputFile: "go-env/minimal/minimal.generated",
 		},
 		{
-			name:       "markdown/minimal",
-			configFile: "markdown/minimal.yaml",
-			goldenFile: "markdown/minimal.md",
-			template:   "../templates/markdown",
-			outputFile: "markdown/minimal.generated",
-		},
-		// Custom types tests
-		{
-			name:       "example/types",
-			configFile: "example/types.yaml",
-			goldenFile: "example/types.env",
-			template:   "../templates/example",
-			outputFile: "example/types.generated",
-		},
-		{
 			name:       "go-env/types",
 			configFile: "go-env/types.yaml",
 			goldenFile: "go-env/types/types.go",
 			template:   "../templates/go-env",
 			outputFile: "go-env/types/types.generated",
-		},
-		{
-			name:       "markdown/types",
-			configFile: "markdown/types.yaml",
-			goldenFile: "markdown/types.md",
-			template:   "../templates/markdown",
-			outputFile: "markdown/types.generated",
-		},
-		// Prefix tests
-		{
-			name:       "example/prefix",
-			configFile: "example/prefix.yaml",
-			goldenFile: "example/prefix.env",
-			template:   "../templates/example",
-			outputFile: "example/prefix.generated",
 		},
 		{
 			name:       "go-env/prefix",
@@ -118,35 +111,11 @@ func TestTemplates(t *testing.T) {
 			outputFile: "go-env/prefix/prefix.generated",
 		},
 		{
-			name:       "markdown/prefix",
-			configFile: "markdown/prefix.yaml",
-			goldenFile: "markdown/prefix.md",
-			template:   "../templates/markdown",
-			outputFile: "markdown/prefix.generated",
-		},
-		// Options tests
-		{
 			name:       "go-env/options",
 			configFile: "go-env/options.yaml",
 			goldenFile: "go-env/options/options.go",
 			template:   "../templates/go-env",
 			outputFile: "go-env/options/options.generated",
-		},
-		{
-			name:       "markdown/options",
-			configFile: "markdown/options.yaml",
-			goldenFile: "markdown/options.md",
-			template:   "../templates/markdown",
-			outputFile: "markdown/options.generated",
-		},
-		// Ignore tests
-		{
-			name:         "example/ignore",
-			configFile:   "example/ignore.yaml",
-			goldenFile:   "example/ignore",
-			template:     "../templates/example",
-			outputFile:   "example/ignore.generated",
-			ignoreGroups: []string{"Webserver"},
 		},
 		{
 			name:         "go-env/ignore-types",
@@ -176,22 +145,12 @@ func TestTemplates(t *testing.T) {
 			ignoreGroups: []string{"App"},
 		},
 		{
-			name:         "markdown/ignore",
-			configFile:   "markdown/ignore.yaml",
-			goldenFile:   "markdown/ignore.md",
-			template:     "../templates/markdown",
-			outputFile:   "markdown/ignore.generated",
-			ignoreGroups: []string{"Webserver"},
-		},
-		// Tags tests
-		{
 			name:       "go-env/tags",
 			configFile: "go-env/tags.yaml",
 			template:   "../templates/go-env",
 			goldenFile: "go-env/tags/tags.go",
 			outputFile: "go-env/tags/tags.generated",
 		},
-		// Custom generate commands test
 		{
 			name:       "go-env/custom_generate",
 			configFile: "go-env/custom_generate.yaml",
@@ -199,7 +158,6 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/custom_generate/config.go",
 			outputFile: "go-env/custom_generate/config.generated",
 		},
-		// Meta only test
 		{
 			name:       "go-env/meta_only",
 			configFile: "go-env/meta_only.yaml",
@@ -207,7 +165,6 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/meta_only/config.go",
 			outputFile: "go-env/meta_only/config.generated",
 		},
-		// Generate only test
 		{
 			name:       "go-env/generate_only",
 			configFile: "go-env/generate_only.yaml",
@@ -215,13 +172,59 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/generate_only/config.go",
 			outputFile: "go-env/generate_only/config.generated",
 		},
-		// Skip env tag test
 		{
 			name:       "go-env/skip_env_tag",
-			configFile: "go-env/skip_env_tag_test.yaml",
+			configFile: "go-env/skip_env_tag.yaml",
 			template:   "../templates/go-env",
 			goldenFile: "go-env/skip_env_tag/skip_env_tag.go",
 			outputFile: "go-env/skip_env_tag/skip_env_tag.generated",
+		},
+
+		// --------------------------------
+		// Markdown template tests (Documentation)
+		// --------------------------------
+		{
+			name:       "markdown/basic",
+			configFile: "markdown/basic.yaml",
+			goldenFile: "markdown/basic.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/basic.generated",
+		},
+		{
+			name:       "markdown/minimal",
+			configFile: "markdown/minimal.yaml",
+			goldenFile: "markdown/minimal.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/minimal.generated",
+		},
+		{
+			name:       "markdown/types",
+			configFile: "markdown/types.yaml",
+			goldenFile: "markdown/types.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/types.generated",
+		},
+		{
+			name:       "markdown/prefix",
+			configFile: "markdown/prefix.yaml",
+			goldenFile: "markdown/prefix.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/prefix.generated",
+		},
+		{
+			name:       "markdown/options",
+			configFile: "markdown/options.yaml",
+			goldenFile: "markdown/options.md",
+			template:   "../templates/markdown",
+			outputFile: "markdown/options.generated",
+		},
+		{
+			name:         "markdown/ignore",
+			configFile:   "markdown/ignore.yaml",
+			goldenFile:   "markdown/ignore.md",
+			template:     "../templates/markdown",
+			outputFile:   "markdown/ignore.generated",
+			ignoreGroups: []string{"Webserver"},
 		},
 		{
 			name:       "markdown/column_visibility",
@@ -229,6 +232,53 @@ func TestTemplates(t *testing.T) {
 			template:   "../templates/markdown",
 			goldenFile: "markdown/column_visibility.md",
 			outputFile: "markdown/column_visibility.generated",
+		},
+
+		// --------------------------------
+		// Go-env-example template tests (.env.example)
+		// --------------------------------
+		{
+			name:       "go-env-example/skip_env_tag",
+			configFile: "go-env-example/skip_env_tag.yaml",
+			template:   "../templates/go-env-example",
+			goldenFile: "go-env-example/skip_env_tag.env",
+			outputFile: "go-env-example/skip_env_tag.generated",
+		},
+		{
+			name:       "go-env-example/basic",
+			configFile: "example/basic.yaml",
+			template:   "../templates/go-env-example",
+			goldenFile: "go-env-example/basic.env",
+			outputFile: "go-env-example/basic.generated",
+		},
+		{
+			name:       "go-env-example/minimal",
+			configFile: "example/minimal.yaml",
+			template:   "../templates/go-env-example",
+			goldenFile: "go-env-example/minimal.env",
+			outputFile: "go-env-example/minimal.generated",
+		},
+		{
+			name:       "go-env-example/prefix",
+			configFile: "example/prefix.yaml",
+			template:   "../templates/go-env-example",
+			goldenFile: "go-env-example/prefix.env",
+			outputFile: "go-env-example/prefix.generated",
+		},
+		{
+			name:       "go-env-example/types",
+			configFile: "example/types.yaml",
+			template:   "../templates/go-env-example",
+			goldenFile: "go-env-example/types.env",
+			outputFile: "go-env-example/types.generated",
+		},
+		{
+			name:         "go-env-example/ignore",
+			configFile:   "example/ignore.yaml",
+			template:     "../templates/go-env-example",
+			goldenFile:   "go-env-example/ignore.env",
+			outputFile:   "go-env-example/ignore.generated",
+			ignoreGroups: []string{"Webserver"},
 		},
 	}
 
