@@ -2,7 +2,7 @@
 
 ## Logger
 
-Настройки логирования
+Logger configuration
 
 | Name |
 |--------|
@@ -10,7 +10,7 @@
 
 ## App
 
-Основные настройки приложения
+Main application settings
 
 | Name |
 |--------|

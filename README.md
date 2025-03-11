@@ -428,6 +428,13 @@ options:
   md_types_hide_import: true       # Hide Import column
   md_types_hide_description: true  # Hide Description column
   md_types_hide_values: true       # Hide Possible Values column
+
+groups:
+  - ...
+    fields:
+      - ...
+        options:
+          md_hide: true  # This field will be hidden in documentation 
 ```
 
 These options are additional and not required.

@@ -14,32 +14,48 @@ options:
 
 types:
   - name: LogLevel
-    description: Уровень логирования
+    description: Application log level
     values: ["debug", "info", "warn", "error"]
     import: "github.com/example/pkg/log"
 
   - name: MetricsFormat
-    description: Формат метрик
+    description: Metrics output format
     values: ["prometheus", "influx"]
     import: "github.com/example/pkg/metrics"
 
 groups:
   - name: Logger
-    description: Настройки логирования
+    description: Logger configuration
     type: LoggerConfig
     fields:
       - name: level
         type: LogLevel
-        description: Уровень логирования для приложения
+        description: Application logging level
         required: true
         default: "info"
+      
+      - name: debug_level
+        type: LogLevel
+        description: Debug logging level
+        required: false
+        default: "debug"
+        options:
+          md_hide: true  # This field will be hidden in documentation
 
   - name: App
-    description: Основные настройки приложения
+    description: Main application settings
     type: AppConfig
     fields:
       - name: metrics_format
         type: MetricsFormat
-        description: Формат экспорта метрик
+        description: Format for metrics export
         required: false
-        default: "prometheus" 
+        default: "prometheus"
+      
+      - name: internal_metrics_port
+        type: int
+        description: Internal metrics port
+        required: false
+        default: "9090"
+        options:
+          md_hide: true  # This field will be hidden in documentation 
