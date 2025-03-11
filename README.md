@@ -2,27 +2,27 @@
 
 **`envgen` – A powerful tool for generating environment configuration from YAML**
 
-Creates type-safe Go structures, `.env.example` files, documentation, and any other files using custom templates.
+Creates type-safe Go structs, `.env.example`, documentation, and any other files using custom templates
 
 [Russian Documentation (Русская версия)](README.ru.md)
 
-### Advantages
+### Benefits
 
 - 🔒 **Type Safety**: Type validation at compile time
-- 🔄 **Automatic Generation**: Documentation and examples are always synchronized with code
+- 🔄 **Automatic Generation**: Documentation and examples always in sync with code
 - 🎨 **Any Template**: Support for custom templates and formats
-- 🛠 **Flexible Configuration**: Simple settings for customization
-- 📝 **Auto-documentation**: Automatically generated Markdown documentation
+- 🛠 **Flexible Configuration**: Use simple settings for customization
+- 📝 **Auto-documentation**: Markdown documentation generated automatically
 - 🔍 **Transparency**: Clear configuration structure in YAML format
 
 ## Features
 
-- Multiple output formats:
-  - Go structures with `env` tags
-  - Environment file examples (`.env.example`)
-  - Documentation in Markdown format
-- Configurable templates
-- Support for custom templates
+- Various output formats:
+  - Go structs with `env` tags
+  - Environment example files (`.env.example`)
+  - Markdown documentation
+- Customizable templates
+- Ability to use custom templates
 
 ## Installation
 
@@ -50,7 +50,7 @@ types:
 groups:
   - name: Server
     description: Web server settings
-    prefix: SERVER_  # Prefix for environment variables
+    prefix: SERVER_  # Environment variable prefix
     fields:
       - name: port
         type: int
@@ -83,39 +83,39 @@ The tool supports the following flags:
 
 - `-c, --config`: Path to input YAML configuration file (required)
 - `-o, --out`: Path to output file (required)
-- `-t, --template`: Path to template file or URL (required)
+- `-t, --template`: Path to template or URL (required)
 - `--ignore-types`: Comma-separated list of types to ignore
 - `--ignore-groups`: Comma-separated list of groups to ignore
 
 Examples:
 ```bash
-# Generation using local template
+# Generate using local template
 envgen -c config.yaml -o config.go -t ./templates/config.tmpl
 
-# Generation using template from URL
+# Generate using template from URL
 envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
 
-# Generation ignoring specific types and groups
+# Generate database configurations only
 envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
 
 # Show version
 envgen version
 ```
 
-This will create a `config.go` file with type-safe structures for configuration handling. The generated code will use environment variables with the `SERVER_` prefix (e.g., `SERVER_PORT`, `SERVER_HOST`, `SERVER_ENV`).
+This will create a `config.go` file with type-safe structs for configuration handling. The generated code will use environment variables with the `SERVER_` prefix (e.g., `SERVER_PORT`, `SERVER_HOST`, `SERVER_ENV`).
 
 ## Configuration Format
 
 ### Options
 
-Options allow you to customize and modify information in the template. Different templates use different options.
+Options enable you to configure and modify information in the template. Different templates use different options.
 
 ```yaml
 options:
   go_package: mypkg
 ```
 
-This example shows an option that sets the package name for the `go-env` template. You can also set options in a group and in individual fields.
+This example shows an option that will set the package name for the `go-env` template. You can also set options in a group and in an individual field.
 
 ### Groups
 
@@ -125,7 +125,7 @@ Groups organize related configuration fields:
 groups:
   - name: Database     # Required: group name
     description: Database settings # Optional: group description
-    prefix: DB_         # Optional: prefix for environment variables
+    prefix: DB_         # Optional: environment variable prefix
     options:            # Optional: group parameters
       go_name: DBConfig # Optional: any template option
     fields:             # Required: at least one field must be defined
@@ -180,7 +180,7 @@ types:
     description: Media source link
 ```
 
-To use created types, specify their name as the type value in the field description:
+To use created types, specify their `name` as the `type` value in the field description:
 
 ```yaml
 fields:
@@ -190,27 +190,6 @@ fields:
   - name: twitter                  
     type: AppURL                # Type can be used multiple times
     example: "http://x.com/safeblock" 
-```
-
-The following special keys are available in options:
-- `{{ ConfigPath }}` - outputs the path to the configuration file
-- `{{ OutputPath }}` - outputs the path to the output file
-- `{{ TemplatePath }}` - outputs the path to the template
-
-Special options are also available for groups and fields:
-
-```yaml
-groups:
-  - name: App
-    description: Application settings
-    options:
-      go_name: CustomAppConfig
-    fields:
-      - name: debug_mode
-        type: bool
-        description: Enable debug mode
-        options:
-          go_name: IsDebug
 ```
 
 ## Advanced Features
@@ -259,14 +238,14 @@ This is especially useful when you have structures that you don't want to show, 
 
 The tool includes three built-in templates:
 
-- `go-env`: Generates Go structures with `env` tags
+- `go-env`: Generates Go structs with `env` tags
 - `example`: Creates `.env` file templates
-- `markdown`: Creates documentation in Markdown format
+- `markdown`: Creates Markdown documentation
 
 Examples of using built-in templates:
 
 ```bash
-# Generate Go structures
+# Generate Go structs
 envgen -c config.yaml -o config.go -t go-env
 
 # Generate .env file template
@@ -284,27 +263,27 @@ The `go-env` template supports global options:
 options:
   go_package: config # Required field
   go_generate: |
-    # Generate configuration
+    # Configuration generation
     //go:generate envgen -c {{ ConfigPath }} -o {{ OutputPath }} -t {{ TemplatePath }}
-    # Generate documentation
+    # Documentation generation
     //go:generate envgen -c {{ ConfigPath }} -o docs/{{ OutputPath }} -t markdown
   go_meta: |
     // Version: v0.1.2
     // Template: {{ TemplatePath }}
 ```
 
-The `go_package` option is required for the `go-env` template. If not specified, `envgen` will try to use the folder name from the `out` flag, but this is considered bad practice since if the path is something like `config.go`, the package name will be set to `.`.
+The `go_package` option is required for the `go-env` template. If no value is specified, `envgen` will try to use the folder name from the `out` flag, but this is considered bad practice since if the path is like `config.go`, the package name will be set as `.`, which will lead to a compilation error.
 
-The `go_generate` option lets you specify custom code generation commands. If not specified, the default command is used.
+The `go_generate` option allows you to specify custom code generation commands. If this option is not specified, the default command is used.
 
-The `go_meta` option adds additional information after the `go_generate` block.
+The `go_meta` option will add additional information after the `go_generate` block.
 
-The following special keys are available in options:
-- `{{ ConfigPath }}` - outputs the path to the configuration file
-- `{{ OutputPath }}` - outputs the path to the output file
-- `{{ TemplatePath }}` - outputs the path to the template
+The following special keys are available in options (`go_generate`, `go_meta`):
+- `{{ ConfigPath }}` - outputs the configuration file path
+- `{{ OutputPath }}` - outputs the output file path
+- `{{ TemplatePath }}` - outputs the template path
 
-Special options are also available for groups and fields:
+Special options for customizing names for groups and fields are also available:
 
 ```yaml
 groups:
@@ -320,13 +299,66 @@ groups:
           go_name: IsDebug
 ```
 
-Result:
+Execution result:
 
 ```go
 // App name changed to CustomAppConfig
 type CustomAppConfig struct {
    // DebugMode name (debug_mode in config file) changed to IsDebug
 	IsDebug bool `env:"DEBUG_MODE" envDefault:"false"`
+}
+```
+
+Additional options for configuring `env` tags are available for fields:
+
+- `go_env_options` - enables you to add additional options to the `env` tag. For example: `file`, `unset`, `notEmpty`, and other options. All options are passed directly to tags without additional validation.
+- `go_tags` - enables you to add additional tags for the struct. Supports specifying any tags without restrictions. When used with the [`env`](github.com/caarlos0/env/v11) package, commonly used:
+  - `envSeparator` - separator for slices
+  - `envKeyValSeparator` - separator for keys and values in maps
+
+Usage example:
+
+```yaml
+fields:
+  - name: config_path
+    type: string
+    description: Path to configuration file
+    required: true
+    options:
+      go_env_options: file  # Check file existence
+    example: "/etc/app/config.json"
+  
+  - name: api_key
+    type: string
+    description: API key that will be cleared after reading
+    required: true
+    options:
+      go_env_options: unset,notEmpty  # Clear after reading and check for emptiness
+    example: "secret-key"
+  
+  - name: tags
+    type: "[]string"
+    description: List of tags with custom separator
+    options:
+      go_tags: envSeparator:";"  # Use ; as separator
+    example: "tag1;tag2;tag3"
+
+  - name: labels
+    type: "map[string]string"
+    description: Key-values with custom separators
+    options:
+      go_tags: envSeparator:";" envKeyValSeparator:"="  # Separators for list and key-value pairs
+    example: "key1=value1;key2=value2"
+```
+
+Execution result:
+
+```go
+type AppConfig struct {
+	ConfigPath string `env:"APP_CONFIG_PATH,required,file"` // Path to configuration file
+	ApiKey string `env:"APP_API_KEY,required,unset,notEmpty"` // API key that will be cleared after reading
+	Tags []string `env:"APP_TAGS" envSeparator:";"` // List of tags with custom separator
+	Labels map[string]string `env:"APP_LABELS" envSeparator:";" envKeyValSeparator:"="` // Key-values with custom separators
 }
 ```
 
@@ -377,9 +409,9 @@ UPDATE_GOLDEN=1 go test ./templates_tests
 
 ## Frequently Asked Questions
 
-### How to Add a Custom Template?
+### How to add your own template?
 
-Create a template file with `.tmpl` or `.tpl` extension. Use Go templates syntax and available context functions. Example of a simple template:
+Create a template file with `.tmpl` or `.tpl` extension. Use Go templates syntax and available functions from context. Simple template example:
 
 ```go
 // File: custom.tmpl
@@ -392,7 +424,7 @@ Create a template file with `.tmpl` or `.tpl` extension. Use Go templates syntax
 {{- end }}
 ```
 
-Generate using template:
+Generate template:
 ```bash
 envgen -c config.yaml -o custom.txt -t ./custom.tmpl
 ```
@@ -409,7 +441,7 @@ DB_HOST=localhost  # Database host
 DB_PORT=5432  # Database port
 ```
 
-### How to Use Custom Types?
+### How to use custom types?
 
 1. Define type in configuration:
 ```yaml
@@ -426,36 +458,36 @@ fields:
     type: CustomType
 ```
 
-### What Functions are Available in Templates?
+### What functions are available in templates?
 
 The following built-in functions are available in templates:
 
 - String manipulation functions:
-  - `title` - convert first letter to uppercase
-  - `upper` - convert to uppercase
-  - `lower` - convert to lowercase
-  - `pascal` - convert to PascalCase
-  - `camel` - convert to camelCase
-  - `snake` - convert to snake_case
-  - `kebab` - convert to kebab-case
-  - `append` - append string to end
-  - `uniq` - remove duplicates
-  - `slice` - get substring
-  - `contains` - check for substring
-  - `hasPrefix` - check prefix
-  - `hasSuffix` - check suffix
-  - `replace` - replace substring
-  - `trim` - remove whitespace
-  - `join` - join strings
-  - `split` - split string
+  - `title` - converts first letter to uppercase
+  - `upper` - converts to uppercase
+  - `lower` - converts to lowercase
+  - `pascal` - converts to PascalCase
+  - `camel` - converts to camelCase
+  - `snake` - converts to snake_case
+  - `kebab` - converts to kebab-case
+  - `append` - appends string to end
+  - `uniq` - removes duplicates
+  - `slice` - gets substring
+  - `contains` - checks for substring
+  - `hasPrefix` - checks prefix
+  - `hasSuffix` - checks suffix
+  - `replace` - replaces substring
+  - `trim` - removes whitespace
+  - `join` - joins strings
+  - `split` - splits string
 
 - Type manipulation functions:
-  - `toString` - convert to string
-  - `toInt` - convert to integer
-  - `toBool` - convert to boolean
-  - `findType` - find type information
-  - `getImports` - get import list
-  - `typeImport` - get type import
+  - `toString` - converts to string
+  - `toInt` - converts to integer
+  - `toBool` - converts to boolean
+  - `findType` - finds type information
+  - `getImports` - gets import list
+  - `typeImport` - gets type import
 
 - Date and time functions:
   - `now` - current time
@@ -477,9 +509,9 @@ The following built-in functions are available in templates:
   - `getFileName` - get file name
   - `getFileExt` - get file extension
   - `joinPaths` - join paths
-  - `getConfigPath` - path to configuration file
-  - `getOutputPath` - path to output file
-  - `getTemplatePath` - path to template file
+  - `getConfigPath` - configuration file path
+  - `getOutputPath` - output file path
+  - `getTemplatePath` - template file path
 
 Usage example:
 ```go
@@ -491,16 +523,16 @@ Usage example:
 package {{ getOption "go_package" }}
 {{ end }}
 
-// Date and time operations
+// Working with date and time
 {{ datetime }}  // Result: 2024-03-21 15:04:05
 
 // Conditional operations
 {{ $value := "test" | default "default_value" }}
 
-// Path operations
+// Working with paths
 {{ $dir := getFileName "/path/to/file.txt" }}  // Result: file.txt
 ```
 
 ## License
 
-MIT 
+MIT

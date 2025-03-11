@@ -281,7 +281,7 @@ options:
 - `{{ OutputPath }}` - выведет путь к выходному файлу
 - `{{ TemplatePath }}` - выведет путь к шаблону
 
-Также доступны специальные опции для групп (`groups`) и полей (`fields`):
+Также доступны специальные опции по настройки имени для групп (`groups`) и полей (`fields`):
 
 ```yaml
 groups:
@@ -304,6 +304,59 @@ groups:
 type CustomAppConfig struct {
    // Имя DebugMode (debug_mode в файле конфигурации) изменено на IsDebug
 	IsDebug bool `env:"DEBUG_MODE" envDefault:"false"`
+}
+```
+
+Для полей также доступны дополнительные опции для настройки тегов `env`:
+
+- `go_env_options` - позволяет добавить дополнительные опции в тег `env`. Например: `file`, `unset`, `notEmpty` и другие опции. Все опции передаются напрямую в теги без дополнительной валидации.
+- `go_tags` - позволяет добавить дополнительные теги для структуры. Поддерживает указание любых тегов без ограничений. При использовании с пакетом [`env`](github.com/caarlos0/env/v11) часто используются:
+  - `envSeparator` - разделитель для слайсов
+  - `envKeyValSeparator` - разделитель для ключей и значений в мапах
+
+Пример использования:
+
+```yaml
+fields:
+  - name: config_path
+    type: string
+    description: Путь к файлу конфигурации
+    required: true
+    options:
+      go_env_options: file  # Проверка существования файла
+    example: "/etc/app/config.json"
+  
+  - name: api_key
+    type: string
+    description: API ключ, который будет очищен после чтения
+    required: true
+    options:
+      go_env_options: unset,notEmpty  # Очистка после чтения и проверка на пустоту
+    example: "secret-key"
+  
+  - name: tags
+    type: "[]string"
+    description: Список тегов с пользовательским разделителем
+    options:
+      go_tags: envSeparator:";"  # Использование ; как разделителя
+    example: "tag1;tag2;tag3"
+
+  - name: labels
+    type: "map[string]string"
+    description: Ключи-значения с пользовательскими разделителями
+    options:
+      go_tags: envSeparator:";" envKeyValSeparator:"="  # Разделители для списка и пар ключ-значение
+    example: "key1=value1;key2=value2"
+```
+
+Результат выполнения:
+
+```go
+type AppConfig struct {
+	ConfigPath string `env:"APP_CONFIG_PATH,required,file"` // Путь к файлу конфигурации
+	ApiKey string `env:"APP_API_KEY,required,unset,notEmpty"` // API ключ, который будет очищен после чтения
+	Tags []string `env:"APP_TAGS" envSeparator:";"` // Список тегов с пользовательским разделителем
+	Labels map[string]string `env:"APP_LABELS" envSeparator:";" envKeyValSeparator:"="` // Ключи-значения с пользовательскими разделителями
 }
 ```
 
