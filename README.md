@@ -309,14 +309,55 @@ type CustomAppConfig struct {
 }
 ```
 
-Additional options for configuring `env` tags are available for fields:
+Additional options for configuring `env` tags for groups and fields:
 
-- `go_env_options` - enables you to add additional options to the `env` tag. For example: `file`, `unset`, `notEmpty`, and other options. All options are passed directly to tags without additional validation.
-- `go_tags` - enables you to add additional tags for the struct. Supports specifying any tags without restrictions. When used with the [`env`](github.com/caarlos0/env/v11) package, commonly used:
+- `go_skip_env_tag` - disables the generation of the `env` tag
+
+Example usage:
+
+```yaml
+  - name: NoEnvTag
+    description: Group without env tags
+    options:
+      go_skip_env_tag: true
+    fields:
+      - name: sentry
+        type: SentryConfig
+      - name: grpc_port
+        type: int
+        default: "8002"
+      - name: http_port
+        type: int
+        default: "8001"
+        options:
+          go_name: HTTP_PORT
+          go_tags: env:"NOT_SKIPPED"
+    
+  - name: CustomEnvTags
+    description: Selective application of env tags
+    fields:
+      - name: not_skipped
+        type: string
+      - name: debug
+        type: bool
+        options:
+          go_skip_env_tag: true
+      - name: port
+        type: int
+        options:
+          go_skip_env_tag: true
+          go_env_options: skipped
+          go_tags: env:"NOT_SKIPPED,required,notEmpty"
+```
+
+Field-specific options:
+
+- `go_env_options` - allows adding additional options to the `env` tag. For example: `file`, `unset`, `notEmpty`, and other options. All options are passed directly to the tags without additional validation.
+- `go_tags` - allows adding additional tags to the structure. Supports specifying any tags without restrictions. When used with the [`env`](github.com/caarlos0/env/v11) package, commonly used options include:
   - `envSeparator` - separator for slices
-  - `envKeyValSeparator` - separator for keys and values in maps
+  - `envKeyValSeparator` - separator for key-value pairs in maps
 
-Usage example:
+Example usage:
 
 ```yaml
 fields:
@@ -325,7 +366,7 @@ fields:
     description: Path to configuration file
     required: true
     options:
-      go_env_options: file  # Check file existence
+      go_env_options: file  # Check if file exists
     example: "/etc/app/config.json"
   
   - name: api_key
@@ -345,7 +386,7 @@ fields:
 
   - name: labels
     type: "map[string]string"
-    description: Key-values with custom separators
+    description: Key-value pairs with custom separators
     options:
       go_tags: envSeparator:";" envKeyValSeparator:"="  # Separators for list and key-value pairs
     example: "key1=value1;key2=value2"

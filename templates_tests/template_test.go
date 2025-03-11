@@ -215,6 +215,14 @@ func TestTemplates(t *testing.T) {
 			goldenFile: "go-env/generate_only/config.go",
 			outputFile: "go-env/generate_only/config.generated",
 		},
+		// Skip env tag test
+		{
+			name:       "go-env/skip_env_tag",
+			configFile: "go-env/skip_env_tag_test.yaml",
+			template:   "../templates/go-env",
+			goldenFile: "go-env/skip_env_tag/skip_env_tag.go",
+			outputFile: "go-env/skip_env_tag/skip_env_tag.generated",
+		},
 	}
 
 	for _, tt := range tests {

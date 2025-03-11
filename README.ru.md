@@ -307,7 +307,48 @@ type CustomAppConfig struct {
 }
 ```
 
-Для полей также доступны дополнительные опции для настройки тегов `env`:
+Дополнительные опции для настройки тегов `env` для групп и полей:
+
+- `go_skip_env_tag` - отключает генерацию тега `env`
+
+Пример использования:
+
+```yaml
+  - name: NoEnvTag
+    description: Группа без тегов env
+    options:
+      go_skip_env_tag: true
+    fields:
+      - name: sentry
+        type: SentryConfig
+      - name: grpc_port
+        type: int
+        default: "8002"
+      - name: http_port
+        type: int
+        default: "8001"
+        options:
+          go_name: HTTP_PORT
+          go_tags: env:"NOT_SKIPPED"
+    
+  - name: CustomEnvTags
+    description: Выборочное применение тегов env
+    fields:
+      - name: not_skipped
+        type: string
+      - name: debug
+        type: bool
+        options:
+          go_skip_env_tag: true
+      - name: port
+        type: int
+        options:
+          go_skip_env_tag: true
+          go_env_options: skipped
+          go_tags: env:"NOT_SKIPPED,required,notEmpty"
+```
+
+опции только для полей:
 
 - `go_env_options` - позволяет добавить дополнительные опции в тег `env`. Например: `file`, `unset`, `notEmpty` и другие опции. Все опции передаются напрямую в теги без дополнительной валидации.
 - `go_tags` - позволяет добавить дополнительные теги для структуры. Поддерживает указание любых тегов без ограничений. При использовании с пакетом [`env`](github.com/caarlos0/env/v11) часто используются:

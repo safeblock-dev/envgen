@@ -34,10 +34,14 @@ type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $gr
 	{{- $envOpts := slice $envTag }}
 	{{- if $field.Required }}{{ $envOpts = append $envOpts "required" }}{{ end }}
 	{{- if $field.Options.go_env_options }}{{ $envOpts = append $envOpts $field.Options.go_env_options }}{{ end }}
+	{{- $tags := slice }}
+	{{- if not (or $field.Options.go_skip_env_tag $group.Options.go_skip_env_tag) }}
 	{{- $envTags := printf `env:"%s"` (join $envOpts ",") }}
 	{{- if $field.Default }}{{ $envTags = printf `%s envDefault:"%s"` $envTags $field.Default }}{{ end }}
-	{{- if $field.Options.go_tags }}{{ $envTags = printf `%s %s` $envTags $field.Options.go_tags }}{{ end }}
-	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }} `{{ $envTags }}` // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
+	{{- $tags = append $tags $envTags }}
+	{{- end }}
+	{{- if $field.Options.go_tags }}{{ $tags = append $tags $field.Options.go_tags }}{{ end }}
+	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }}{{ if $tags }} `{{ join $tags " " }}`{{ end }} // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
 	{{- end }}
 }
 {{- end }}
