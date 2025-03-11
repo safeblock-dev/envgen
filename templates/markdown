@@ -10,6 +10,10 @@
 ## {{ $group.Name | title }}
 
 {{ $group.Description }}
+{{- if $group.Options.md_description }}
+
+{{ $group.Options.md_description }}
+{{- end }}
 
 | Name{{ if not $.Options.md_groups_hide_type }} | Type{{ end }}{{ if not $.Options.md_groups_hide_required }} | Required{{ end }}{{ if not $.Options.md_groups_hide_default }} | Default{{ end }}{{ if not $.Options.md_groups_hide_example }} | Example{{ end }}{{ if not $.Options.md_groups_hide_description }} | Description{{ end }} |
 |--------{{ if not $.Options.md_groups_hide_type }}|------{{ end }}{{ if not $.Options.md_groups_hide_required }}|----------{{ end }}{{ if not $.Options.md_groups_hide_default }}|---------{{ end }}{{ if not $.Options.md_groups_hide_example }}|---------{{ end }}{{ if not $.Options.md_groups_hide_description }}|-------------{{ end }}|

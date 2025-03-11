@@ -415,7 +415,7 @@ options:
     Additional description at the top of the page
   md_types_title: Types Section Title
   md_types_description: |
-    Additional descript
+    Additional description
 
   # Hide specific columns in the groups table
   md_groups_hide_type: true        # Hide Type column
@@ -432,6 +432,8 @@ options:
 
 groups:
   - ...
+    options:
+      md_description: Additional description
     fields:
       - ...
         options:

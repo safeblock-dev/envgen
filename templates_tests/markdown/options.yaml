@@ -19,6 +19,15 @@ types:
 groups:
   - name: App
     description: Main application settings
+    options:
+      md_description: |
+        Core application configuration settings.
+        
+        > **Important**: Changes to these settings require application restart.
+        
+        For development mode, set `APP_MODE=development` and `APP_DEBUG=true`.
+        
+        See [Database](#database) section for database connection configuration.
     fields:
       - name: mode
         type: Environment
@@ -38,6 +47,19 @@ groups:
   - name: Database
     description: Database connection settings
     prefix: DB_
+    options:
+      md_description: |
+        PostgreSQL database connection configuration.
+        
+        Connection string format:
+        ```
+        postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+        ```
+        
+        For local development, default connection string would be:
+        ```
+        postgresql://postgres:postgres@localhost:5432/app
+        ```
     fields:
       - name: host
         type: string

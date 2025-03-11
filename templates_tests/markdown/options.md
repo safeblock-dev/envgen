@@ -9,6 +9,15 @@ For local development, you can use the provided `.env.example` file as a templat
 
 Main application settings
 
+Core application configuration settings.
+
+> **Important**: Changes to these settings require application restart.
+
+For development mode, set `APP_MODE=development` and `APP_DEBUG=true`.
+
+See [Database](#database) section for database connection configuration.
+
+
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|
 | `MODE` | [`Environment`](#custom-types) | ✗ | `production` | `production` | Application running mode (Possible values: development, staging, production) |
@@ -18,6 +27,19 @@ Main application settings
 ## Database
 
 Database connection settings
+
+PostgreSQL database connection configuration.
+
+Connection string format:
+```
+postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+```
+
+For local development, default connection string would be:
+```
+postgresql://postgres:postgres@localhost:5432/app
+```
+
 
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|

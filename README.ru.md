@@ -434,6 +434,8 @@ options:
 
 groups:
   - ...
+    options:
+      md_description: "Описание для группы"
     fields:
       - ...
         options:
