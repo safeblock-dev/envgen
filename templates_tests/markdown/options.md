@@ -11,7 +11,7 @@ Main application settings
 
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|
-| `MODE` | [`Environment`](#custom-types) (string) | ✗ | `production` | `production` | Application running mode (Possible values: development, staging, production) |
+| `MODE` | [`Environment`](#custom-types) | ✗ | `production` | `production` | Application running mode (Possible values: development, staging, production) |
 | `DEBUG` | bool | ✗ | `false` | - | Enable debug logging |
 | `PORT` | int | ✓ | - | `8080` | HTTP server port |
 
