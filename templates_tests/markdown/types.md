@@ -6,17 +6,17 @@ Application settings
 
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|
-| `ENV` | string | ✓ | - | `development` | Application environment (Possible values: development, staging, production) |
-| `API_URL` | *url.URL | ✓ | - | `https://api.example.com` | API endpoint |
-| `REQUEST_TIMEOUT` | time.Duration | ✗ | `30s` | - | API request timeout |
-| `RESPONSE_TIMEOUT` | time.Duration | ✗ | `30s` | - | API response timeout |
-| `ALLOWED_IPS` | []net.IP | ✗ | - | `127.0.0.1,192.168.1.1` | List of allowed IP addresses |
+| `ENV` | [`Environment`](#custom-types) (string) | ✓ | - | `development` | Application environment (Possible values: development, staging, production) |
+| `API_URL` | [`URL`](#custom-types) (*url.URL) | ✓ | - | `https://api.example.com` | API endpoint |
+| `REQUEST_TIMEOUT` | [`Duration`](#custom-types) (time.Duration) | ✗ | `30s` | - | API request timeout |
+| `RESPONSE_TIMEOUT` | [`Duration`](#custom-types) (time.Duration) | ✗ | `30s` | - | API response timeout |
+| `ALLOWED_IPS` | [`IpAddresses`](#custom-types) ([]net.IP) | ✗ | - | `127.0.0.1,192.168.1.1` | List of allowed IP addresses |
 
 ## Custom Types
 
-| Type | Import Path | Description | Possible Values |
-|----|------------|-------------|----------------|
-| `Environment` | - | Application environment | `development`, `staging`, `production` |
-| `URL` | `net/url` | URL type | - |
-| `Duration` | `time` | Duration type | - |
-| `IpAddresses` | `net` | IP addresses type | - | 
+| Name | Type | Import Path | Description | Possible Values |
+|----|------|------------|-------------|----------------|
+| `Environment` | string | - | Application environment | `development`, `staging`, `production` |
+| `URL` | *url.URL | `net/url` | URL type | - |
+| `Duration` | time.Duration | `time` | Duration type | - |
+| `IpAddresses` | []net.IP | `net` | IP addresses type | - | 

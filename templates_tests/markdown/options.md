@@ -11,7 +11,7 @@ Main application settings
 
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|
-| `MODE` | string | ✗ | `production` | `production` | Application running mode (Possible values: development, staging, production) |
+| `MODE` | [`Environment`](#custom-types) (string) | ✗ | `production` | `production` | Application running mode (Possible values: development, staging, production) |
 | `DEBUG` | bool | ✗ | `false` | - | Enable debug logging |
 | `PORT` | int | ✓ | - | `8080` | HTTP server port |
 
@@ -34,6 +34,6 @@ These types provide additional validation and documentation for specific environ
 Each type includes its possible values.
 
 
-| Type | Import Path | Description | Possible Values |
-|----|------------|-------------|----------------|
-| `Environment` | - | Application environment | `development`, `staging`, `production` | 
+| Name | Type | Import Path | Description | Possible Values |
+|----|------|------------|-------------|----------------|
+| `Environment` | string | - | Application environment | `development`, `staging`, `production` | 

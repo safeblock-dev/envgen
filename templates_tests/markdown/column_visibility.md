@@ -18,7 +18,7 @@
 
 ## Custom Types
 
-| Type |
+| Name |
 |----|
 | `LogLevel` |
 | `MetricsFormat` | 

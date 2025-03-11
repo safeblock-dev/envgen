@@ -15,7 +15,7 @@
 |--------{{ if not $.Options.md_groups_hide_type }}|------{{ end }}{{ if not $.Options.md_groups_hide_required }}|----------{{ end }}{{ if not $.Options.md_groups_hide_default }}|---------{{ end }}{{ if not $.Options.md_groups_hide_example }}|---------{{ end }}{{ if not $.Options.md_groups_hide_description }}|-------------{{ end }}|
 {{- range $field := $group.Fields }}
 {{- $typeInfo := findType $field.Type }}
-| `{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}`{{ if not $.Options.md_groups_hide_type }} | {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_required }} | {{ if $field.Required }}✓{{ else }}✗{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_default }} | {{ if $field.Default }}`{{ $field.Default }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_example }} | {{ if $field.Example }}`{{ $field.Example }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_description }} | {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}{{ end }} |
+| `{{ if $group.Prefix }}{{ $group.Prefix }}{{ end }}{{ $field.Name | upper }}`{{ if not $.Options.md_groups_hide_type }} | {{ if $typeInfo }}[`{{ $typeInfo.Name }}`](#custom-types) ({{ $typeInfo.Type }}){{ else }}{{ $field.Type }}{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_required }} | {{ if $field.Required }}✓{{ else }}✗{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_default }} | {{ if $field.Default }}`{{ $field.Default }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_example }} | {{ if $field.Example }}`{{ $field.Example }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_groups_hide_description }} | {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}{{ end }} |
 {{- end }}
 
 {{- end }}
@@ -29,9 +29,9 @@
 {{ .Options.md_types_description }}
 {{- end }}
 
-| Type{{ if not $.Options.md_types_hide_import }} | Import Path{{ end }}{{ if not $.Options.md_types_hide_description }} | Description{{ end }}{{ if not $.Options.md_types_hide_values }} | Possible Values{{ end }} |
-|----{{ if not $.Options.md_types_hide_import }}|------------{{ end }}{{ if not $.Options.md_types_hide_description }}|-------------{{ end }}{{ if not $.Options.md_types_hide_values }}|----------------{{ end }}|
+| Name{{ if not $.Options.md_types_hide_type }} | Type{{ end }}{{ if not $.Options.md_types_hide_import }} | Import Path{{ end }}{{ if not $.Options.md_types_hide_description }} | Description{{ end }}{{ if not $.Options.md_types_hide_values }} | Possible Values{{ end }} |
+|----{{ if not $.Options.md_types_hide_type }}|------{{ end }}{{ if not $.Options.md_types_hide_import }}|------------{{ end }}{{ if not $.Options.md_types_hide_description }}|-------------{{ end }}{{ if not $.Options.md_types_hide_values }}|----------------{{ end }}|
 {{- range $type := .Types }}
-| `{{ $type.Name }}`{{ if not $.Options.md_types_hide_import }} | {{ if $type.Import }}`{{ $type.Import }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_types_hide_description }} | {{ $type.Description }}{{ end }}{{ if not $.Options.md_types_hide_values }} | {{ if $type.Values }}{{ range $i, $value := $type.Values }}{{ if $i }}, {{ end }}`{{ $value }}`{{ end }}{{ else }}-{{ end }}{{ end }} |
+| `{{ $type.Name }}`{{ if not $.Options.md_types_hide_type }} | {{ $type.Type }}{{ end }}{{ if not $.Options.md_types_hide_import }} | {{ if $type.Import }}`{{ $type.Import }}`{{ else }}-{{ end }}{{ end }}{{ if not $.Options.md_types_hide_description }} | {{ $type.Description }}{{ end }}{{ if not $.Options.md_types_hide_values }} | {{ if $type.Values }}{{ range $i, $value := $type.Values }}{{ if $i }}, {{ end }}`{{ $value }}`{{ end }}{{ else }}-{{ end }}{{ end }} |
 {{- end }}
 {{- end }} 

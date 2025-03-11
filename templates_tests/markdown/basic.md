@@ -17,10 +17,10 @@ Database connection settings
 | Name | Type | Required | Default | Example | Description |
 |--------|------|----------|---------|---------|-------------|
 | `DB_URL` | string | ✓ | - | `postgres://user:pass@localhost:5432/db` | Database connection URL |
-| `DB_LOG_LEVEL` | string | ✗ | `info` | - | Database logging level (Possible values: debug, info, warn, error) |
+| `DB_LOG_LEVEL` | [`LogLevel`](#custom-types) (string) | ✗ | `info` | - | Database logging level (Possible values: debug, info, warn, error) |
 
 ## Custom Types
 
-| Type | Import Path | Description | Possible Values |
-|----|------------|-------------|----------------|
-| `LogLevel` | - | Log level for the application | `debug`, `info`, `warn`, `error` | 
+| Name | Type | Import Path | Description | Possible Values |
+|----|------|------------|-------------|----------------|
+| `LogLevel` | string | - | Log level for the application | `debug`, `info`, `warn`, `error` | 

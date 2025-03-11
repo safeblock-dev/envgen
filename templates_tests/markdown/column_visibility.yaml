@@ -7,6 +7,7 @@ options:
   md_groups_hide_description: true # Hide Description column
 
   # Hide specific columns in the types table
+  md_types_hide_type: true        # Hide Type column
   md_types_hide_import: true       # Hide Import column
   md_types_hide_description: true  # Hide Description column
   md_types_hide_values: true       # Hide Possible Values column
