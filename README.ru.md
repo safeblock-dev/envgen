@@ -72,32 +72,49 @@ groups:
 
 2. Сгенерируйте Go-код:
 ```bash
-envgen -c config.yaml -o config.go -t go-env
+envgen gen -c config.yaml -o config.go -t go-env
 ```
 
-### Флаги командной строки
+### Команды
 
-Инструмент поддерживает следующие флаги:
+`envgen` поддерживает следующие команды:
 
-- `-c, --config`: Путь к входному YAML-файлу конфигурации (обязательный)
-- `-o, --out`: Путь к выходному файлу (обязательный)
-- `-t, --template`: Путь к файлу шаблона или URL (обязательный)
-- `--ignore-types`: Список типов для игнорирования через запятую
-- `--ignore-groups`: Список групп для игнорирования через запятую
+- `gen` (или `generate`): Генерация файлов конфигурации
+  - `-c, --config`: Путь к входному YAML-файлу конфигурации (обязательный)
+  - `-o, --out`: Путь к выходному файлу (обязательный)
+  - `-t, --template`: Путь к файлу шаблона или URL (обязательный)
+  - `--ignore-types`: Список типов для игнорирования через запятую
+  - `--ignore-groups`: Список групп для игнорирования через запятую
+
+- `ls` (или `templates`, `list`): Показать список доступных стандартных шаблонов
+
+- `version`: Показать версию программы
 
 Примеры:
 ```bash
 # Генерация с использованием локального шаблона
-envgen -c config.yaml -o config.go -t ./templates/config.tmpl
+envgen gen -c config.yaml -o config.go -t ./templates/config.tmpl
 
 # Генерация с использованием шаблона из URL
-envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
+envgen gen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
 
 # Генерация с игнорированием определенных типов и групп
-envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
+envgen gen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
+
+# Показать список доступных шаблонов
+envgen ls
 
 # Показать версию
 envgen version
+
+# Генерация Go-структур
+envgen gen -c config.yaml -o config.go -t go-env
+
+# Генерация шаблона .env файла
+envgen gen -c config.yaml -o .env.example -t example
+
+# Генерация документации
+envgen gen -c config.yaml -o config.md -t markdown
 ```
 
 Это создаст файл `config.go` с типобезопасными структурами для работы с конфигурацией. Сгенерированный код будет использовать переменные окружения с префиксом `SERVER_` (например, `SERVER_PORT`, `SERVER_HOST`, `SERVER_ENV`).
@@ -227,7 +244,7 @@ groups:
 
 Генерация только конфигураций баз данных:
 ```bash
-envgen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
+envgen gen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
 ```
 
 Это особенно полезно, когда у вас есть структуры, которые вы не хотите показывать, например, в `.env.example`.

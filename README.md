@@ -74,29 +74,37 @@ groups:
 
 2. Generate Go code:
 ```bash
-envgen -c config.yaml -o config.go -t go-env
+envgen gen -c config.yaml -o config.go -t go-env
 ```
 
-### Command Line Flags
+### Commands
 
-The tool supports the following flags:
+`envgen` supports the following commands:
 
-- `-c, --config`: Path to input YAML configuration file (required)
-- `-o, --out`: Path to output file (required)
-- `-t, --template`: Path to template or URL (required)
-- `--ignore-types`: Comma-separated list of types to ignore
-- `--ignore-groups`: Comma-separated list of groups to ignore
+- `gen` (or `generate`): Generate configuration files
+  - `-c, --config`: Path to input YAML configuration file (required)
+  - `-o, --out`: Path to output file (required)
+  - `-t, --template`: Path to template or URL (required)
+  - `--ignore-types`: Comma-separated list of types to ignore
+  - `--ignore-groups`: Comma-separated list of groups to ignore
+
+- `ls` (or `templates`, `list`): List available standard templates
+
+- `version`: Show program version
 
 Examples:
 ```bash
 # Generate using local template
-envgen -c config.yaml -o config.go -t ./templates/config.tmpl
+envgen gen -c config.yaml -o config.go -t ./templates/config.tmpl
 
 # Generate using template from URL
-envgen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
+envgen gen --config config.yaml --out config.go --template https://raw.githubusercontent.com/user/repo/template.tmpl
 
-# Generate database configurations only
-envgen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
+# Generate with ignoring specific types and groups
+envgen gen -c config.yaml -o config.go -t ./templates/config.tmpl --ignore-types Duration,URL --ignore-groups Database
+
+# Show available templates
+envgen ls
 
 # Show version
 envgen version
@@ -229,14 +237,14 @@ groups:
 
 Generate only database configurations:
 ```bash
-envgen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
+envgen gen -c config.yaml -o config.go -t go-env --ignore-groups Webserver
 ```
 
 This is especially useful when you have structures that you don't want to show, for example, in `.env.example`.
 
 ### Templates
 
-The tool includes three built-in templates:
+The tool includes four built-in templates:
 
 - `go-env`: Generates Go structs with `env` tags
 - `go-env-example`: Creates `.env.example` templates considering `go-env` tags (options)
@@ -247,13 +255,13 @@ Examples of using built-in templates:
 
 ```bash
 # Generate Go structs
-envgen -c config.yaml -o config.go -t go-env
+envgen gen -c config.yaml -o config.go -t go-env
 
 # Generate .env file template
-envgen -c config.yaml -o .env.example -t example
+envgen gen -c config.yaml -o .env.example -t example
 
 # Generate documentation
-envgen -c config.yaml -o config.md -t markdown
+envgen gen -c config.yaml -o config.md -t markdown
 ```
 
 ### Go Template Options
