@@ -4,7 +4,7 @@
 VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
 LDFLAGS := -X 'main.version=$(VERSION)'
 
-all: lint test build
+all: lint test generate build
 
 build: ## Build the project
 	@echo "==> Building version $(VERSION)..."

@@ -4,7 +4,7 @@
 // Generate configuration
 //go:generate envgen gen -c ../meta.yaml -o config.generated -t ../../../templates/go-env
 // Generate documentation
-//go:generate envgen gen -c ../meta.yaml -o docs/README.md -t ../../templates/markdown
+//go:generate envgen gen -c ../meta.yaml -o docs/README.md -t ../../../templates/markdown
 
 package meta
 

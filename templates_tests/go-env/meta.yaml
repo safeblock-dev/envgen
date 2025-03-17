@@ -3,7 +3,7 @@ options:
     // Generate configuration
     {{ goCommentGenerate "" "" "" }}
     // Generate documentation
-    {{ goCommentGenerate "" "docs/README.md" "../../templates/markdown" }}
+    {{ goCommentGenerate "" "docs/README.md" "../../../templates/markdown" }}
 
 types:
   - name: Environment
