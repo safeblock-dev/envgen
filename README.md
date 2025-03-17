@@ -262,22 +262,20 @@ The `go-env` template supports global options:
 
 ```yaml
 options:
-  go_package: config # Required field
-  go_generate: |
-    # Configuration generation
-    //go:generate envgen -c {{ ConfigPath }} -o {{ OutputPath }} -t {{ TemplatePath }}
-    # Documentation generation
-    //go:generate envgen -c {{ ConfigPath }} -o docs/{{ OutputPath }} -t markdown
+  go_package: config # Optional field
   go_meta: |
+    # Configuration generation
+    {{ goCommentGenerate "" "" "" }}
+    # Documentation generation
+    {{ goCommentGenerate "" "docs/README.md" "../../templates/markdown" }}
     // Version: v0.1.2
-    // Template: {{ TemplatePath }}
 ```
 
-The `go_package` option is required for the `go-env` template. If no value is specified, `envgen` will try to use the folder name from the `out` flag, but this is considered bad practice since if the path is like `config.go`, the package name will be set as `.`, which will lead to a compilation error.
+If the `go_package` value is not specified, `envgen` will attempt to use the folder name from the `out` flag.
 
-The `go_generate` option allows you to specify custom code generation commands. If this option is not specified, the default command is used.
+The `go_meta` option allows you to specify custom commands for code generation. If this option is not specified, the default command is used. If you don't want the `//go:generate` output, leave the `go_meta` field empty.
 
-The `go_meta` option will add additional information after the `go_generate` block.
+The `go_meta` option allows you to call any template functions from the [funcs.go](pkg/envgen/funcs.go) file (for example `title`, `upper`, etc.).
 
 The following special keys are available in options (`go_generate`, `go_meta`):
 - `{{ ConfigPath }}` - outputs the configuration file path
@@ -448,21 +446,6 @@ The template does not use any special options.
 
 ## Development
 
-### Project Structure
-
-```
-.
-├── cmd/envgen/             # CLI application
-├── pkg/envgen/             # Main package
-│   ├── config.go           # Configuration types and validation
-│   ├── envgen.go           # Main generation logic
-│   ├── template.go         # Template loading
-│   ├── template_context.go # Template context and functions
-│   └── templatefuncs/      # Template helper functions
-├── templates/              # Built-in templates
-└── templates_tests/        # Tests and examples
-```
-
 ### Running Tests
 
 ```bash
@@ -533,10 +516,10 @@ The following built-in functions are available in templates:
   - `title` - converts first letter to uppercase
   - `upper` - converts to uppercase
   - `lower` - converts to lowercase
-  - `pascal` - converts to PascalCase
   - `camel` - converts to camelCase
   - `snake` - converts to snake_case
   - `kebab` - converts to kebab-case
+  - `pascal` - converts to PascalCase
   - `append` - appends string to end
   - `uniq` - removes duplicates
   - `slice` - gets substring
@@ -547,6 +530,8 @@ The following built-in functions are available in templates:
   - `trim` - removes whitespace
   - `join` - joins strings
   - `split` - splits string
+  - `oneline` - converts multiline text to single line
+  - `isURL` - checks if string is a URL
 
 - Type manipulation functions:
   - `toString` - converts to string
@@ -554,7 +539,6 @@ The following built-in functions are available in templates:
   - `toBool` - converts to boolean
   - `findType` - finds type information
   - `getImports` - gets import list
-  - `typeImport` - gets type import
 
 - Date and time functions:
   - `now` - current time
@@ -570,15 +554,19 @@ The following built-in functions are available in templates:
   - `hasGroupOption` - check group option existence
   - `getOption` - get option value
   - `getGroupOption` - get group option value
+  - `processTemplate` - process template using available functions
 
 - Path manipulation functions:
-  - `getDirName` - get directory name
-  - `getFileName` - get file name
-  - `getFileExt` - get file extension
-  - `joinPaths` - join paths
+  - `pathDir` - get directory name from path
+  - `pathBase` - get file name from path
+  - `pathExt` - get file extension
+  - `pathRel` - get relative path
   - `getConfigPath` - configuration file path
   - `getOutputPath` - output file path
   - `getTemplatePath` - template file path
+
+- Go-specific functions:
+  - `goCommentGenerate` - generate go:generate comment
 
 Usage example:
 ```go
@@ -597,7 +585,15 @@ package {{ getOption "go_package" }}
 {{ $value := "test" | default "default_value" }}
 
 // Working with paths
-{{ $dir := getFileName "/path/to/file.txt" }}  // Result: file.txt
+{{ pathBase "/path/to/file.txt" }}  // Result: file.txt
+
+// Working with URLs
+{{ if isURL "https://github.com" }}
+  // URL is valid
+{{ end }}
+
+// Working with multiline text
+{{ $text := "line1\nline2" | oneline }}  // Result: line1 line2
 ```
 
 ## License

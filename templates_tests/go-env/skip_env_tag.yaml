@@ -1,6 +1,3 @@
-options:
-  go_package: config
-
 groups:
   ###
   ### Apps

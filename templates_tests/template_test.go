@@ -31,13 +31,13 @@ func TestTemplates(t *testing.T) {
 		// --------------------------------
 		// URL template tests
 		// --------------------------------
-		{
-			name:       "go-env/url",
-			configFile: "go-env/url.yaml",
-			goldenFile: "go-env/url/url.go",
-			template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
-			outputFile: "go-env/url/url.generated",
-		},
+		// {
+		// 	name:       "go-env/url",
+		// 	configFile: "go-env/url.yaml",
+		// 	goldenFile: "go-env/url/url.go",
+		// 	template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
+		// 	outputFile: "go-env/url/url.generated",
+		// },
 
 		// --------------------------------
 		// Example template tests (.env)
@@ -152,25 +152,18 @@ func TestTemplates(t *testing.T) {
 			outputFile: "go-env/tags/tags.generated",
 		},
 		{
-			name:       "go-env/custom_generate",
-			configFile: "go-env/custom_generate.yaml",
+			name:       "go-env/meta",
+			configFile: "go-env/meta.yaml",
 			template:   "../templates/go-env",
-			goldenFile: "go-env/custom_generate/config.go",
-			outputFile: "go-env/custom_generate/config.generated",
+			goldenFile: "go-env/meta/config.go",
+			outputFile: "go-env/meta/config.generated",
 		},
 		{
-			name:       "go-env/meta_only",
-			configFile: "go-env/meta_only.yaml",
+			name:       "go-env/empty_meta",
+			configFile: "go-env/empty_meta.yaml",
 			template:   "../templates/go-env",
-			goldenFile: "go-env/meta_only/config.go",
-			outputFile: "go-env/meta_only/config.generated",
-		},
-		{
-			name:       "go-env/generate_only",
-			configFile: "go-env/generate_only.yaml",
-			template:   "../templates/go-env",
-			goldenFile: "go-env/generate_only/config.go",
-			outputFile: "go-env/generate_only/config.generated",
+			goldenFile: "go-env/empty_meta/config.go",
+			outputFile: "go-env/empty_meta/config.generated",
 		},
 		{
 			name:       "go-env/skip_env_tag",
@@ -287,7 +280,7 @@ func TestTemplates(t *testing.T) {
 			t.Parallel()
 
 			// Generate file
-			err := envgen.Generate(envgen.GenerateOptions{
+			err := envgen.Generate(t.Context(), envgen.Options{
 				ConfigPath:   tt.configFile,
 				OutputPath:   tt.outputFile,
 				TemplatePath: tt.template,

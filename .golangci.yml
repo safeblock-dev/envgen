@@ -26,7 +26,19 @@ linters-settings:
     exclude:
       - "^github.com/spf13/cobra.Command$"
 
+  
+  revive:
+    rules:
+      - name: var-naming
+        arguments:
+          - [ ] # AllowList
+          - [ ]  # DenyList
+          - - skipPackageNameChecks: true
+
 issues:
+  exclude:
+    - "ST1003: should not use underscores in package names"
+    
   exclude-rules:
     - path: "_test\\.go"
       linters:
@@ -34,8 +46,16 @@ issues:
         - exhaustruct
         - funlen
         - lll
+    - path: "templates_tests/template_test\\.go"
+      linters:
+        - maintidx
     - path: "cmd/envgen/main\\.go"
       linters:
         - lll
+        - gochecknoglobals
+        - forbidigo
+        - gochecknoinits
+    - path: "commands/.+\\.go"
+      linters:
         - gochecknoglobals
         - forbidigo

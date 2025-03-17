@@ -1,6 +1,3 @@
-options:
-  go_package: minimal
-
 groups:
   - name: Minimal
     description: Minimal group with one field

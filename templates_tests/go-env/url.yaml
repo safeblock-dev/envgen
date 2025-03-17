@@ -1,6 +1,3 @@
-options:
-  go_package: urltest
-
 groups:
   - name: App
     description: Basic application settings

@@ -14,6 +14,7 @@ go.work
 # IDE and editor settings
 .idea/
 .vscode/
+.local/
 
 # macOS-specific files
 .DS_Store

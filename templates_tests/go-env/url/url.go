@@ -3,7 +3,7 @@
 
 //go:generate envgen -c ../url.yaml -o url.generated -t https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env
 
-package urltest
+package url
 
 // AppConfig represents Basic application settings
 type AppConfig struct {

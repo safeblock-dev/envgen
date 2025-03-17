@@ -1,6 +1,3 @@
-options:
-  go_package: prefix
-
 groups:
   - name: App
     description: Application settings

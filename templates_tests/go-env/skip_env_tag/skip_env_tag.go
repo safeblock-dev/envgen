@@ -3,7 +3,7 @@
 
 //go:generate envgen -c ../skip_env_tag.yaml -o skip_env_tag.generated -t ../../../templates/go-env
 
-package config
+package skip_env_tag
 
 // WebserverConfig represents Skip env tags for the entire group
 type WebserverConfig struct {
