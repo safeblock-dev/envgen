@@ -140,11 +140,15 @@ func (e *Envgen) goCommentGenerate(configPath, outputFile, templatePath string) 
 	}
 
 	if templatePath == "" {
-		templatePath, err = filepath.Rel(
-			filepath.Dir(e.userOutput.GetPath()), e.userTemplate.GetPath(),
-		)
-		if err != nil {
-			log.Println("error getting relative template path:", err)
+		if template_funcs.IsURL(e.userTemplate.GetPath()) {
+			templatePath = e.userTemplate.GetPath()
+		} else {
+			templatePath, err = filepath.Rel(
+				filepath.Dir(e.userOutput.GetPath()), e.userTemplate.GetPath(),
+			)
+			if err != nil {
+				log.Println("error getting relative template path:", err)
+			}
 		}
 	}
 
