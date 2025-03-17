@@ -21,7 +21,6 @@ var (
 	templatePath string
 	ignoreTypes  []string
 	ignoreGroups []string
-	force        bool
 )
 
 // NewGenerateCmd creates a new generate command.
@@ -47,7 +46,6 @@ The template can be:
 	cmd.Flags().StringVarP(&templatePath, "template", "t", "", "Template name, path, or URL")
 	cmd.Flags().StringSliceVar(&ignoreTypes, "ignore-types", nil, "Types to ignore (comma-separated)")
 	cmd.Flags().StringSliceVar(&ignoreGroups, "ignore-groups", nil, "Groups to ignore (comma-separated)")
-	cmd.Flags().BoolVarP(&force, "force", "f", false, "Force overwrite existing files")
 
 	// Mark required flags
 	_ = cmd.MarkFlagRequired("config")
@@ -58,13 +56,6 @@ The template can be:
 }
 
 func runGenerate(cmd *cobra.Command, _ []string) error {
-	// Check if output file exists
-	if !force {
-		if _, err := os.Stat(outputPath); err == nil {
-			return fmt.Errorf("output file %s already exists, use --force to overwrite", outputPath)
-		}
-	}
-
 	// Create output directory if it doesn't exist
 	if dir := filepath.Dir(outputPath); dir != "." {
 		if err := os.MkdirAll(dir, defaultDirPerm); err != nil {
