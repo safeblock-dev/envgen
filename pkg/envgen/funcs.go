@@ -152,7 +152,7 @@ func (e *Envgen) goCommentGenerate(configPath, outputFile, templatePath string) 
 		}
 	}
 
-	path := fmt.Sprintf("//go:generate envgen -c %s -o %s -t %s", configPath, outputFile, templatePath)
+	path := fmt.Sprintf("//go:generate envgen gen -c %s -o %s -t %s", configPath, outputFile, templatePath)
 
 	return path
 }

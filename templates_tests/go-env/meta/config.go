@@ -2,9 +2,9 @@
 // This file was automatically generated and should not be modified manually.
 
 // Generate configuration
-//go:generate envgen -c ../meta.yaml -o config.generated -t ../../../templates/go-env
+//go:generate envgen gen -c ../meta.yaml -o config.generated -t ../../../templates/go-env
 // Generate documentation
-//go:generate envgen -c ../meta.yaml -o docs/README.md -t ../../templates/markdown
+//go:generate envgen gen -c ../meta.yaml -o docs/README.md -t ../../templates/markdown
 
 package meta
 
