@@ -31,13 +31,13 @@ func TestTemplates(t *testing.T) {
 		// --------------------------------
 		// URL template tests
 		// --------------------------------
-		// {
-		// 	name:       "go-env/url",
-		// 	configFile: "go-env/url.yaml",
-		// 	goldenFile: "go-env/url/url.go",
-		// 	template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
-		// 	outputFile: "go-env/url/url.generated",
-		// },
+		{
+			name:       "go-env/url",
+			configFile: "go-env/url.yaml",
+			goldenFile: "go-env/url/url.go",
+			template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
+			outputFile: "go-env/url/url.generated",
+		},
 
 		// --------------------------------
 		// Example template tests (.env)
