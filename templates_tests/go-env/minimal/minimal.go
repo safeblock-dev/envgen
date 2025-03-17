@@ -5,7 +5,7 @@
 
 package minimal
 
-// MinimalConfig represents Minimal group with one field
+// MinimalConfig Minimal group with one field
 type MinimalConfig struct {
 	Value string `env:"VALUE"` // A single value
 }

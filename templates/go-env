@@ -21,7 +21,7 @@ import (
 
 {{- range $group := .Groups }}
 
-// {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} represents {{ $group.Description }}
+// {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} {{ $group.Description }}
 type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} struct {
 	{{- range $j, $field := $group.Fields }}
 	{{- $typeInfo := findType $field.Type }}

@@ -5,14 +5,14 @@
 
 package config
 
-// AppConfig represents Basic application settings
+// AppConfig Basic application settings
 type AppConfig struct {
 	Debug bool `env:"DEBUG" envDefault:"false"` // Enable debug mode
 	Port int `env:"PORT,required"` // Server port
 	Host string `env:"HOST" envDefault:"localhost"` // Server host
 }
 
-// DatabaseConfig represents Database connection settings
+// DatabaseConfig Database connection settings
 type DatabaseConfig struct {
 	Url string `env:"DB_URL,required"` // Database connection URL
 	LogLevel string `env:"DB_LOG_LEVEL" envDefault:"info"` // Database logging level (Possible values: debug, info, warn, error)

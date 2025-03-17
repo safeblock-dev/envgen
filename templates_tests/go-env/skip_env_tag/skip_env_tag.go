@@ -5,7 +5,7 @@
 
 package skip_env_tag
 
-// WebserverConfig represents Skip env tags for the entire group
+// WebserverConfig Skip env tags for the entire group
 type WebserverConfig struct {
 	Health HealthConfig // Configuration for health check endpoints and monitoring
 	Prometheus PrometheusConfig // Configuration for Prometheus metrics collection and export
@@ -15,35 +15,35 @@ type WebserverConfig struct {
 	HTTP_PORT int `env:"NOT_SKIPPED"` // TCP port number for the HTTP server to listen on
 }
 
-// TestServerConfig represents Test server configuration
+// TestServerConfig Test server configuration
 type TestServerConfig struct {
 	Health HealthConfig `env:"HEALTH"` // Not skipped
 	Debug bool // Skip env tags for this field
 	Port int `env:"NOT_SKIPPED,required,notEmpty"` // Skip only default env tags for this field
 }
 
-// HealthConfig represents Configuration for application health monitoring
+// HealthConfig Configuration for application health monitoring
 type HealthConfig struct {
 	Port int `env:"HEALTH_PORT" envDefault:"0"` // TCP port number for the health check HTTP endpoint (0 for random port)
 }
 
-// PrometheusConfig represents Configuration for Prometheus metrics integration
+// PrometheusConfig Configuration for Prometheus metrics integration
 type PrometheusConfig struct {
 	Port int `env:"PROMETHEUS_PORT" envDefault:"0"` // TCP port number for the Prometheus metrics endpoint (0 for random port)
 }
 
-// SentryConfig represents Configuration for Sentry error tracking service
+// SentryConfig Configuration for Sentry error tracking service
 type SentryConfig struct {
 	DSN string `env:"SENTRY_DSN"` // Sentry service DSN (Data Source Name) for error reporting
 }
 
-// OpenTelemetryConfig represents Configuration for OpenTelemetry observability platform
+// OpenTelemetryConfig Configuration for OpenTelemetry observability platform
 type OpenTelemetryConfig struct {
 	DSN string `env:"OPEN_TELEMETRY_DSN"` // OpenTelemetry collector endpoint DSN (Data Source Name)
 	Debug bool `env:"OPEN_TELEMETRY_DEBUG" envDefault:"false"` // Enable debug level logging for OpenTelemetry operations
 }
 
-// S3Config represents Configuration for S3-compatible object storage service
+// S3Config Configuration for S3-compatible object storage service
 type S3Config struct {
 	AccessKey string `env:"S3_ACCESS_KEY,required,notEmpty"` // Access key ID for S3 API authentication
 	BucketName string `env:"S3_BUCKET_NAME,required,notEmpty"` // Name of the target S3 bucket for storage operations
@@ -52,17 +52,17 @@ type S3Config struct {
 	SecretKey string `env:"S3_SECRET_KEY,required,notEmpty"` // Secret access key for S3 API authentication
 }
 
-// PostgresConfig represents Configuration for PostgreSQL database connection
+// PostgresConfig Configuration for PostgreSQL database connection
 type PostgresConfig struct {
 	URL string `env:"POSTGRES_URL,required,notEmpty"` // PostgreSQL connection URL
 }
 
-// RedisConfig represents Configuration for Redis database connection
+// RedisConfig Configuration for Redis database connection
 type RedisConfig struct {
 	URL string `env:"REDIS_URL,required,notEmpty"` // Redis connection URL
 }
 
-// RedisStreamConfig represents Configuration for Redis Streams connection [DEPRECATED]
+// RedisStreamConfig Configuration for Redis Streams connection [DEPRECATED]
 type RedisStreamConfig struct {
 	URL string `env:"REDIS_STREAMS_URL,required,notEmpty"` // Redis Streams connection URL
 }

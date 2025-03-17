@@ -5,7 +5,7 @@
 
 package tags
 
-// AppConfig represents Application settings with various env tags
+// AppConfig Application settings with various env tags
 type AppConfig struct {
 	ConfigPath string `env:"APP_CONFIG_PATH,required,file"` // Path to config file
 	ApiKey string `env:"APP_API_KEY,required,unset,notEmpty"` // API key that will be unset after reading

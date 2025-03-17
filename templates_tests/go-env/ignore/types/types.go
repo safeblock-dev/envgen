@@ -8,13 +8,13 @@ import (
 	"time"
 )
 
-// AppConfig represents Application settings
+// AppConfig Application settings
 type AppConfig struct {
 	Env string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
 	Timeout time.Duration `env:"TIMEOUT" envDefault:"30s"` // Operation timeout
 }
 
-// DatabaseConfig represents Database settings
+// DatabaseConfig Database settings
 type DatabaseConfig struct {
 	Host string `env:"DB_HOST" envDefault:"localhost"` // Database host
 	Port int `env:"DB_PORT" envDefault:"5432"` // Database port

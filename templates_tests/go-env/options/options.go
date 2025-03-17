@@ -5,13 +5,13 @@
 
 package config
 
-// CustomAppConfig represents Application settings
+// CustomAppConfig Application settings
 type CustomAppConfig struct {
 	IsDebug bool `env:"DEBUG_MODE" envDefault:"false"` // Enable debug mode
 	Port int `env:"SERVER_PORT,required"` // Server port
 }
 
-// DatabaseConfig represents Database settings
+// DatabaseConfig Database settings
 type DatabaseConfig struct {
 	URL string `env:"CONNECTION_STRING,required"` // Database connection string
 }

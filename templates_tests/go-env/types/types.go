@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// AppConfig represents Application settings
+// AppConfig Application settings
 type AppConfig struct {
 	Env string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
 	ApiUrl *url.URL `env:"API_URL,required"` // API endpoint
