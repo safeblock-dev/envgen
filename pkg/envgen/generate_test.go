@@ -11,7 +11,6 @@ import (
 )
 
 func TestEnvgen_Generate(t *testing.T) {
-	t.Skip()
 	t.Parallel()
 
 	t.Run("simple", func(t *testing.T) {
@@ -26,12 +25,12 @@ func TestEnvgen_Generate(t *testing.T) {
 
 		// Create minimal config file with required group
 		configContent := `groups:
-	- name: App
-		description: Application settings
-		fields:
-		- name: debug
-			type: bool
-			description: Enable debug mode`
+  - name: App
+    description: Application settings
+    fields:
+      - name: debug
+        type: bool
+        description: Enable debug mode`
 		err := os.WriteFile(configPath, []byte(configContent), 0o600)
 		require.NoError(t, err)
 
@@ -52,6 +51,6 @@ func TestEnvgen_Generate(t *testing.T) {
 
 		result, err := os.ReadFile(outputPath)
 		require.NoError(t, err)
-		require.Equal(t, "package main", string(result))
+		require.Equal(t, "package main\n", string(result))
 	})
 }
