@@ -52,20 +52,20 @@ groups:
     description: Web server settings
     prefix: SERVER_  # Environment variable prefix
     fields:
-      - name: port
+      - name: Port
         type: int
         description: Server port
         default: "8080"
         required: true
         example: "9000"
       
-      - name: host
+      - name: Host
         type: string
         description: Server host
         default: "localhost"
         example: "0.0.0.0"
       
-      - name: env
+      - name: ENV
         type: Environment
         description: Environment
         default: "development"
@@ -137,7 +137,7 @@ groups:
     options:            # Optional: group parameters
       go_name: DBConfig # Optional: any template option
     fields:             # Required: at least one field must be defined
-      - name: host
+      - name: Host
         type: string
         description: Database host
         required: true
@@ -150,14 +150,14 @@ Fields represent individual environment variables:
 
 ```yaml
 fields:
-  - name: url                   # Required: environment variable name
+  - name: URL                   # Required: environment variable name
     type: string                # Required: field type (built-in or custom)
     description: API endpoint   # Optional: field description
     default: "http://127.0.0.1" # Optional: default value
     required: true              # Optional: whether the field is required
     example: "http://test.com"  # Optional: example value for documentation
     options:                    # Optional: additional field parameters
-      go_name: "URL"            # Optional: any template option
+      go_name: "GitURL"         # Optional: any template option
 ```
 
 ### Types
@@ -192,10 +192,10 @@ To use created types, specify their `name` as the `type` value in the field desc
 
 ```yaml
 fields:
-  - name: github                  
+  - name: Github                  
     type: AppURL                # Specify type name
     example: "http://github.com/safeblock-dev" 
-  - name: twitter                  
+  - name: Twitter                  
     type: AppURL                # Type can be used multiple times
     example: "http://x.com/safeblock" 
 ```
@@ -212,7 +212,7 @@ groups:
     description: PostgreSQL settings
     prefix: PG_
     fields:
-      - name: host
+      - name: Host
         type: string
         default: localhost
 
@@ -220,18 +220,16 @@ groups:
     description: Redis settings
     prefix: REDIS_
     fields:
-      - name: port
+      - name: Port
         type: int
         default: "6379"
 
   - name: Webserver
     description: Web server configuration
     fields:
-      - name: db
+      - name: DB
         type: Postgres
-        options:
-          name_field: DB
-      - name: cache
+      - name: Cache
         type: Redis
 ```
 
@@ -299,7 +297,7 @@ groups:
     options:
       go_name: CustomAppConfig
     fields:
-      - name: debug_mode
+      - name: DebugMode
         type: bool
         description: Enable debug mode
         options:
@@ -328,37 +326,38 @@ Example usage:
     options:
       go_skip_env_tag: true
     fields:
-      - name: sentry
+      - name: Sentry
         type: SentryConfig
-      - name: grpc_port
+      - name: GRPC_Port
         type: int
         default: "8002"
-      - name: http_port
+      - name: HTTP_Port
         type: int
         default: "8001"
         options:
-          go_name: HTTP_PORT
+          go_name: HttpPort
           go_tags: env:"NOT_SKIPPED"
     
   - name: CustomEnvTags
     description: Selective application of env tags
     fields:
-      - name: not_skipped
+      - name: NotSkipped
         type: string
       - name: debug
         type: bool
         options:
           go_skip_env_tag: true
-      - name: port
+      - name: Port
         type: int
         options:
           go_skip_env_tag: true
-          go_env_options: skipped
+          go_env_options: will_be_ignored
           go_tags: env:"NOT_SKIPPED,required,notEmpty"
 ```
 
 Field-specific options:
 
+- `go_include` - if true, uses Go struct embedding
 - `go_env_options` - allows adding additional options to the `env` tag. For example: `file`, `unset`, `notEmpty`, and other options. All options are passed directly to the tags without additional validation.
 - `go_tags` - allows adding additional tags to the structure. Supports specifying any tags without restrictions. When used with the [`env`](github.com/caarlos0/env/v11) package, commonly used options include:
   - `envSeparator` - separator for slices
@@ -367,46 +366,61 @@ Field-specific options:
 Example usage:
 
 ```yaml
-fields:
-  - name: config_path
-    type: string
-    description: Path to configuration file
-    required: true
-    options:
-      go_env_options: file  # Check if file exists
-    example: "/etc/app/config.json"
-  
-  - name: api_key
-    type: string
-    description: API key that will be cleared after reading
-    required: true
-    options:
-      go_env_options: unset,notEmpty  # Clear after reading and check for emptiness
-    example: "secret-key"
-  
-  - name: tags
-    type: "[]string"
-    description: List of tags with custom separator
-    options:
-      go_tags: envSeparator:";"  # Use ; as separator
-    example: "tag1;tag2;tag3"
+groups:
+  - name: Webserver
+    fields:
+      - name: Config
+        type: Config
+        options:
+          go_skip_env_tag: true
+          go_include: true # Struct embedding
 
-  - name: labels
-    type: "map[string]string"
-    description: Key-value pairs with custom separators
-    options:
-      go_tags: envSeparator:";" envKeyValSeparator:"="  # Separators for list and key-value pairs
-    example: "key1=value1;key2=value2"
+      - name: ApiKey
+        type: string
+        description: API key that will be cleared after reading
+        required: true
+        options:
+          go_env_options: unset,notEmpty  # Clear after reading and check for emptiness
+        example: "secret-key"
+
+      - name: Tags
+        type: "[]string"
+        description: List of tags with custom separator
+        options:
+          go_tags: envSeparator:";"  # Use ; as separator
+        example: "tag1;tag2;tag3"
+
+      - name: privateLabels
+        type: "map[string]string"
+        description: Key-value pairs with custom separators
+        options:
+          go_tags: envSeparator:";" envKeyValSeparator:"="  # Separators for list and key-value pairs
+        example: "key1=value1;key2=value2"
+  - name: Config
+    fields:
+      - name: ConfigPath
+        type: string
+        description: Path to configuration file
+        required: true
+        options:
+          go_env_options: file  # Check if file exists
+        example: "/etc/app/config.json"
 ```
 
 Execution result:
 
 ```go
-type AppConfig struct {
-	ConfigPath string `env:"APP_CONFIG_PATH,required,file"` // Path to configuration file
-	ApiKey string `env:"APP_API_KEY,required,unset,notEmpty"` // API key that will be cleared after reading
-	Tags []string `env:"APP_TAGS" envSeparator:";"` // List of tags with custom separator
-	Labels map[string]string `env:"APP_LABELS" envSeparator:";" envKeyValSeparator:"="` // Key-values with custom separators
+// Webserver
+type Webserver struct {
+  Config
+  ApiKey        string            `env:"API_KEY,required,unset,notEmpty"`                        // API key that will be cleared after reading
+  Tags          []string          `env:"TAGS" envSeparator:";"`                                  // List of tags with custom separator
+  privateLabels map[string]string `env:"PRIVATE_LABELS" envSeparator:";" envKeyValSeparator:"="` // Key-value pairs with custom separators
+}
+
+// Config
+type Config struct {
+    ConfigPath string `env:"CONFIG_PATH,required,file"` // Path to configuration file
 }
 ```
 
@@ -512,7 +526,7 @@ types:
 2. Use it in fields:
 ```yaml
 fields:
-  - name: custom_field
+  - name: CustomField
     type: CustomType
 ```
 

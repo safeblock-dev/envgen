@@ -6,5 +6,5 @@ package empty_meta
 // ServerConfig Server settings
 type ServerConfig struct {
 	Port int `env:"SERVER_PORT,required" envDefault:"8080"` // Server port
-	Env string `env:"SERVER_ENV,required" envDefault:"development"` // Environment (Possible values: development, staging, production)
+	ENV string `env:"SERVER_ENV,required" envDefault:"development"` // Environment (Possible values: development, staging, production)
 }

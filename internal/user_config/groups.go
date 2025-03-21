@@ -15,7 +15,7 @@ import (
 //	    options:                 # Optional: Additional options
 //	      go_name: Appuser       # Optional: Override struct name (Go-specific)
 //	    fields:                  # Required: At least one field must be defined
-//	      - name: port
+//	      - name: Port
 //	        type: int
 type Group struct {
 	Name        string            `yaml:"name"`        // Required: Group name

@@ -9,7 +9,7 @@ groups:
     description: Application settings with various env tags
     prefix: APP_
     fields:
-      - name: config_path
+      - name: ConfigPath
         type: string
         description: Path to config file
         required: true
@@ -17,7 +17,7 @@ groups:
           go_env_options: file
         example: "/etc/app/config.json"
       
-      - name: api_key
+      - name: ApiKey
         type: string
         description: API key that will be unset after reading
         required: true
@@ -25,14 +25,14 @@ groups:
           go_env_options: unset,notEmpty
         example: "secret-key"
       
-      - name: tags
+      - name: Tags
         type: "[]string"
         description: List of tags with custom separator
         options:
           go_tags: envSeparator:";"
         example: "tag1;tag2;tag3"
 
-      - name: labels
+      - name: Labels
         type: "map[string]string"
         description: Key-value labels with custom separators
         options:

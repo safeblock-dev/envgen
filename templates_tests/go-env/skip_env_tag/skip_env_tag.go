@@ -5,18 +5,18 @@
 
 package skip_env_tag
 
-// WebserverConfig Skip env tags for the entire group
-type WebserverConfig struct {
-	Health HealthConfig // Configuration for health check endpoints and monitoring
-	Prometheus PrometheusConfig // Configuration for Prometheus metrics collection and export
-	Sentry SentryConfig // Configuration for Sentry error tracking and monitoring
-	OpenTelemetry OpenTelemetryConfig // Configuration for OpenTelemetry tracing and observability
-	GRPC_PORT int // TCP port number for the gRPC server to listen on
-	HTTP_PORT int `env:"NOT_SKIPPED"` // TCP port number for the HTTP server to listen on
+// Webserver Skip env tags for the entire group
+type Webserver struct {
+	HealthConfig // Configuration for health check endpoints and monitoring
+	PrometheusConfig // Configuration for Prometheus metrics collection and export
+	SentryConfig // Configuration for Sentry error tracking and monitoring
+	OpenTelemetryConfig // Configuration for OpenTelemetry tracing and observability
+	GRPC int // TCP port number for the gRPC server to listen on
+	HTTP int `env:"NOT_SKIPPED"` // TCP port number for the HTTP server to listen on
 }
 
-// TestServerConfig Test server configuration
-type TestServerConfig struct {
+// TestServer Test server configuration
+type TestServer struct {
 	Health HealthConfig `env:"HEALTH"` // Not skipped
 	Debug bool // Skip env tags for this field
 	Port int `env:"NOT_SKIPPED,required,notEmpty"` // Skip only default env tags for this field
@@ -48,7 +48,7 @@ type S3Config struct {
 	AccessKey string `env:"S3_ACCESS_KEY,required,notEmpty"` // Access key ID for S3 API authentication
 	BucketName string `env:"S3_BUCKET_NAME,required,notEmpty"` // Name of the target S3 bucket for storage operations
 	Endpoint string `env:"S3_ENDPOINT,required,notEmpty"` // HTTP(S) endpoint URL of the S3-compatible service
-	Ssl bool `env:"S3_SSL,required" envDefault:"false"` // Enable SSL/TLS encryption for S3 API connections
+	SSL bool `env:"S3_SSL,required" envDefault:"false"` // Enable SSL/TLS encryption for S3 API connections
 	SecretKey string `env:"S3_SECRET_KEY,required,notEmpty"` // Secret access key for S3 API authentication
 }
 
@@ -62,7 +62,7 @@ type RedisConfig struct {
 	URL string `env:"REDIS_URL,required,notEmpty"` // Redis connection URL
 }
 
-// RedisStreamConfig Configuration for Redis Streams connection [DEPRECATED]
-type RedisStreamConfig struct {
+// RedisStream Configuration for Redis Streams connection [DEPRECATED]
+type RedisStream struct {
 	URL string `env:"REDIS_STREAMS_URL,required,notEmpty"` // Redis Streams connection URL
 }

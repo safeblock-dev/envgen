@@ -1,6 +1,3 @@
-options:
-  go_package: config
-
 groups:
   ###
   ### Apps
@@ -16,42 +13,48 @@ groups:
       - name: health
         type: HealthConfig
         description: Configuration for health check endpoints and monitoring
+        options:
+          go_include: true
       - name: prometheus
         type: PrometheusConfig
         description: Configuration for Prometheus metrics collection and export
+        options:
+          go_include: true
       - name: sentry
         type: SentryConfig
         description: Configuration for Sentry error tracking and monitoring
+        options:
+          go_include: true
       - name: open_telemetry
         type: OpenTelemetryConfig
         description: Configuration for OpenTelemetry tracing and observability
-      - name: grpc_port
+        options:
+          go_include: true
+      - name: GRPC_PORT
         type: int
         description: TCP port number for the gRPC server to listen on
         default: "8002"
-        options:
-          go_name: GRPC_PORT
-      - name: http_port
+      - name: HTTP_PORT
         type: int
         description: TCP port number for the HTTP server to listen on
         default: "8001"
         options:
-          go_name: HTTP_PORT
+          go_name: HttpPort
           go_tags: env:"SKIPPED"
-    
+
   - name: TestServer
     description: Test server configuration
     fields:
-      - name: health
+      - name: Health
         type: HealthConfig
         description: Not skipped
-        options:
-          go_skip_env_tag: true
-      - name: debug
+      - name: Debug
         type: bool
         description: Skip env tags for this field
         default: "false"
-      - name: port
+        options:
+          go_skip_env_tag: true
+      - name: Port
         type: int
         description: Skip only default env tags for this field
         default: "8003"
@@ -64,81 +67,77 @@ groups:
   ### SHARED
   ###
 
-  - name: Health
+  - name: HealthConfig
     description: Configuration for application health monitoring
     prefix: HEALTH_
     fields:
-      - name: port
+      - name: Port
         type: int
         description: TCP port number for the health check HTTP endpoint (0 for random port)
         default: "0"
 
-  - name: Prometheus
+  - name: PrometheusConfig
     description: Configuration for Prometheus metrics integration
     prefix: PROMETHEUS_
     fields:
-      - name: port
+      - name: Port
         type: int
         description: TCP port number for the Prometheus metrics endpoint (0 for random port)
         default: "0"
 
-  - name: Sentry
+  - name: SentryConfig
     description: Configuration for Sentry error tracking service
     prefix: SENTRY_
     fields:
-      - name: dsn
+      - name: DSN
         type: string
         description: Sentry service DSN (Data Source Name) for error reporting
         default: ""
-        options:
-          go_name: DSN
 
-  - name: OpenTelemetry
+  - name: OpenTelemetryConfig
     description: Configuration for OpenTelemetry observability platform
     prefix: OPEN_TELEMETRY_
     fields:
-      - name: dsn
+      - name: DSN
         type: string
         description: OpenTelemetry collector endpoint DSN (Data Source Name)
         example: "localhost:8126"
-        options:
-          go_name: DSN
-      - name: debug
+      - name: Debug
         type: bool
         description: Enable debug level logging for OpenTelemetry operations
         default: "false"
 
-  - name: S3
+  - name: S3Config
     description: Configuration for S3-compatible object storage service
     prefix: S3_
     fields:
-      - name: access_key
+      - name: AccessKey
         type: string
         description: Access key ID for S3 API authentication
         required: true
         example: "admin"
         options:
           go_env_options: notEmpty
-      - name: bucket_name
+      - name: BucketName
         type: string
         description: Name of the target S3 bucket for storage operations
         required: true
         example: "buckey"
         options:
           go_env_options: notEmpty
-      - name: endpoint
+      - name: Endpoint
         type: string
         description: HTTP(S) endpoint URL of the S3-compatible service
         required: true
         example: "localhost:9000"
         options:
           go_env_options: notEmpty
-      - name: ssl
+      - name: SSL
         type: bool
         description: Enable SSL/TLS encryption for S3 API connections
         required: true
         default: "false"
-      - name: secret_key
+      - name: SecretKey
         type: string
         description: Secret access key for S3 API authentication
         required: true
@@ -146,41 +145,38 @@ groups:
         options:
           go_env_options: notEmpty
 
-  - name: Postgres
+  - name: PostgresConfig
     description: Configuration for PostgreSQL database connection
     prefix: POSTGRES_
     fields:
-      - name: url
+      - name: URL
         type: string
         description: PostgreSQL connection URL
         required: true
         example: "postgres://postgres:password@localhost:5432/database?sslmode=disable"
         options:
-          go_name: URL
           go_env_options: notEmpty
 
-  - name: Redis
+  - name: RedisConfig
     description: Configuration for Redis database connection
     prefix: REDIS_
     fields:
-      - name: url
+      - name: URL
         type: string
-        description: Redis connection URL 
+        description: Redis connection URL
         required: true
         example: "redis://localhost:6379"
         options:
-          go_name: URL
           go_env_options: notEmpty
 
   - name: RedisStream
     description: Configuration for Redis Streams connection [DEPRECATED]
     prefix: REDIS_STREAMS_
     fields:
-      - name: url
+      - name: URL
         type: string
         description: Redis Streams connection URL
         required: true
         example: "redis://localhost:6379"
         options:
-          go_name: URL
           go_env_options: notEmpty

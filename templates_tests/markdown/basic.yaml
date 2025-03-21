@@ -1,31 +1,35 @@
 groups:
-  - name: App
+  - name: AppConfig
     description: Basic application settings
     fields:
-      - name: debug
+      - name: Debug
         type: bool
         description: Enable debug mode
         default: "false"
-      - name: port
+      - name: Port
         type: int
         description: Server port
         required: true
         example: "8080"
-      - name: host
+      - name: Host
         type: string
         description: Server host
         default: "localhost"
+      - name: mode
+        type: string
+        required: true
+        default: "private"
 
-  - name: Database
+  - name: DatabaseConfig
     description: Database connection settings
     prefix: DB_
     fields:
-      - name: url
+      - name: URL
         type: string
         description: Database connection URL
         required: true
         example: "postgres://user:pass@localhost:5432/db"
-      - name: log_level
+      - name: LogLevel
         type: LogLevel
         description: Database logging level
         default: "info"

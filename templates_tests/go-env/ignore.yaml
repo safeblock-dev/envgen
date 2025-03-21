@@ -19,24 +19,24 @@ groups:
   - name: App
     description: Application settings
     fields:
-      - name: env
+      - name: ENV
         type: Environment
         description: Application environment
         required: true
         example: "development"
-      - name: timeout
+      - name: Timeout
         type: Duration
         description: Operation timeout
         default: "30s"
-  - name: Database
+  - name: DatabaseConfig
     description: Database settings
     prefix: DB_
     fields:
-      - name: host
+      - name: Host
         type: string
         description: Database host
         default: "localhost"
-      - name: port
+      - name: Port
         type: int
         description: Database port
-        default: "5432" 
+        default: "5432"

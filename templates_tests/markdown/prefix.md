@@ -9,7 +9,7 @@ Application settings
 | `APP_DEBUG` | bool | ✗ | `false` | - | Enable debug mode |
 | `APP_PORT` | int | ✓ | - | `8080` | Server port |
 
-## Database
+## DatabaseConfig
 
 Database settings
 

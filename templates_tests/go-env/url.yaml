@@ -2,11 +2,11 @@ groups:
   - name: App
     description: Basic application settings
     fields:
-      - name: debug
+      - name: Debug
         type: bool
         description: Enable debug mode
         default: "false"
-      - name: port
+      - name: Port
         type: int
         description: Server port
         required: true 

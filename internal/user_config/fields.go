@@ -9,7 +9,7 @@ import (
 // Example:
 //
 //	fields:
-//	  - name: port             # Required: Environment variable name
+//	  - name: Port             # Required: Environment variable name
 //	    type: int              # Required: Field type (built-in or custom type)
 //	    description: Port      # Optional: Field description
 //	    default: "8080"        # Optional: Default value

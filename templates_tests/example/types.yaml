@@ -20,25 +20,25 @@ groups:
   - name: App
     description: Application settings
     fields:
-      - name: env
+      - name: ENV
         type: Environment
         description: Application environment
         required: true
         example: "development"
-      - name: api_url
+      - name: ApiURL
         type: URL
         description: API endpoint
         required: true
         example: "https://api.example.com"
-      - name: request_timeout
+      - name: RequestTimeout
         type: Duration
         description: API request timeout
         default: "30s"
-      - name: response_timeout
+      - name: ResponseTimeout
         type: Duration
         description: API response timeout
         default: "30s"
-      - name: allowed_ips
+      - name: AllowedIPs
         type: "IpAddresses"
         description: List of allowed IP addresses
         example: "127.0.0.1,192.168.1.1" 

@@ -37,3 +37,14 @@ REDIS_PASSWORD=
 
 # Redis database number
 REDIS_DB=0
+
+# --------------------------------
+# Webserver
+# Web server configuration
+# --------------------------------
+
+# PostgreSQL configuration
+POSTGRES=
+
+# Redis configuration
+REDIS=

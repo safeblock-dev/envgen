@@ -5,8 +5,8 @@
 
 package prefix
 
-// AppConfig Application settings
-type AppConfig struct {
+// App Application settings
+type App struct {
 	Debug bool `env:"APP_DEBUG" envDefault:"false"` // Enable debug mode
 	Port int `env:"APP_PORT,required"` // Server port
 }

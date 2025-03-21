@@ -7,7 +7,7 @@ groups:
         type: string
         description: Database host
         default: localhost
-      - name: port
+      - name: Port
         type: int
         description: Database port
         default: "5432"
@@ -32,7 +32,7 @@ groups:
         type: string
         description: Redis host
         default: localhost
-      - name: port
+      - name: Port
         type: int
         description: Redis port
         default: "6379"

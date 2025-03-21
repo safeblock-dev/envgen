@@ -2,6 +2,6 @@ groups:
   - name: Minimal
     description: Minimal group with one field
     fields:
-      - name: value
+      - name: Value
         type: string
-        description: A single value 
+        description: A single value

@@ -21,12 +21,12 @@ import (
 
 {{- range $group := .Groups }}
 
-// {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} {{ $group.Description }}
-type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name | pascal }}Config{{ end }} struct {
+// {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name }}{{ end }} {{ $group.Description }}
+type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $group.Name }}{{ end }} struct {
 	{{- range $j, $field := $group.Fields }}
 	{{- $typeInfo := findType $field.Type }}
 	{{- $prefix := default $group.Prefix "" }}
-	{{- $envTag := $field.Name | upper }}
+	{{- $envTag := $field.Name | snake | upper }}
 	{{- if $prefix }}{{ $envTag = printf "%s%s" $prefix $envTag }}{{ end }}
 	{{- $envOpts := slice $envTag }}
 	{{- if $field.Required }}{{ $envOpts = append $envOpts "required" }}{{ end }}
@@ -38,7 +38,7 @@ type {{ if $group.Options.go_name }}{{ $group.Options.go_name }}{{ else }}{{ $gr
 	{{- $tags = append $tags $envTags }}
 	{{- end }}
 	{{- if $field.Options.go_tags }}{{ $tags = append $tags $field.Options.go_tags }}{{ end }}
-	{{ if $field.Options.go_name }}{{ $field.Options.go_name }}{{ else }}{{ $field.Name | pascal }}{{ end }} {{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }}{{ if $tags }} `{{ join $tags " " }}`{{ end }} // {{ if $field.Description }}{{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}{{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
+	{{if ne $field.Options.go_include "true" }}{{ if $field.Options.go_name }}{{ $field.Options.go_name }} {{ else }}{{ $field.Name }} {{ end }}{{ end }}{{ if $typeInfo }}{{ $typeInfo.Type }}{{ else }}{{ $field.Type }}{{ end }}{{ if $tags }} `{{ join $tags " " }}`{{ end }} {{ if $field.Description }}// {{ $field.Description }}{{ else if and $typeInfo $typeInfo.Description }}// {{ $typeInfo.Description }}{{ end }}{{ if and $typeInfo $typeInfo.Values }} (Possible values: {{ join $typeInfo.Values ", " }}){{ end }}
 	{{- end }}
 }
 {{- end }}

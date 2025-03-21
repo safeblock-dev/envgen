@@ -1,6 +1,6 @@
 # Environment Variables Documentation
 
-## App
+## AppConfig
 
 Basic application settings
 
@@ -9,8 +9,9 @@ Basic application settings
 | `DEBUG` | bool | ✗ | `false` | - | Enable debug mode |
 | `PORT` | int | ✓ | - | `8080` | Server port |
 | `HOST` | string | ✗ | `localhost` | - | Server host |
+| `MODE` | string | ✓ | `private` | - |  |
 
-## Database
+## DatabaseConfig
 
 Database connection settings
 

@@ -10,10 +10,11 @@ type AppConfig struct {
 	Debug bool `env:"DEBUG" envDefault:"false"` // Enable debug mode
 	Port int `env:"PORT,required"` // Server port
 	Host string `env:"HOST" envDefault:"localhost"` // Server host
+	mode string `env:"MODE,required" envDefault:"private"` 
 }
 
 // DatabaseConfig Database connection settings
 type DatabaseConfig struct {
-	Url string `env:"DB_URL,required"` // Database connection URL
+	URL string `env:"DB_URL,required"` // Database connection URL
 	LogLevel string `env:"DB_LOG_LEVEL" envDefault:"info"` // Database logging level (Possible values: debug, info, warn, error)
 }

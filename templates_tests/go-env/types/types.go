@@ -10,11 +10,11 @@ import (
 	"time"
 )
 
-// AppConfig Application settings
-type AppConfig struct {
-	Env string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
-	ApiUrl *url.URL `env:"API_URL,required"` // API endpoint
+// App Application settings
+type App struct {
+	ENV string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
+	ApiURL *url.URL `env:"API_URL,required"` // API endpoint
 	RequestTimeout time.Duration `env:"REQUEST_TIMEOUT" envDefault:"30s"` // API request timeout
 	ResponseTimeout time.Duration `env:"RESPONSE_TIMEOUT" envDefault:"30s"` // API response timeout
-	AllowedIps []net.IP `env:"ALLOWED_IPS"` // List of allowed IP addresses
+	AllowedIPs []net.IP `env:"ALLOWED_IPS"` // List of allowed IP addresses
 }

@@ -5,8 +5,13 @@
 
 package config
 
-// CustomAppConfig Application settings
-type CustomAppConfig struct {
+// Webserver Will include App
+type Webserver struct {
+	IncludeAppConfig 
+}
+
+// IncludeAppConfig Application settings
+type IncludeAppConfig struct {
 	IsDebug bool `env:"DEBUG_MODE" envDefault:"false"` // Enable debug mode
 	Port int `env:"SERVER_PORT,required"` // Server port
 }

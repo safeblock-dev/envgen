@@ -11,17 +11,17 @@ types:
       - production
 
 groups:
-  - name: Server
+  - name: ServerConfig
     description: Server settings
     prefix: SERVER_
     fields:
-      - name: port
+      - name: Port
         type: int
         description: Server port
         default: "8080"
         required: true
-      - name: env
+      - name: ENV
         type: Environment
         description: Environment
         default: "development"
-        required: true 
+        required: true

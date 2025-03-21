@@ -29,16 +29,16 @@ groups:
         
         See [Database](#database) section for database connection configuration.
     fields:
-      - name: mode
+      - name: Mode
         type: Environment
         description: Application running mode
         example: production
         default: production
-      - name: debug
+      - name: Debug
         type: bool
         description: Enable debug logging
         default: false
-      - name: port
+      - name: Port
         type: int
         description: HTTP server port
         required: true
@@ -65,7 +65,7 @@ groups:
         type: string
         description: Database host address
         default: localhost
-      - name: port
+      - name: Port
         type: int
         description: Database port number
         default: 5432

@@ -31,7 +31,7 @@ types:
 groups:
   - name: app
     fields:
-      - name: port
+      - name: Port
         type: int
 `), 0o600)
 		require.NoError(t, err)

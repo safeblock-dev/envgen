@@ -3,24 +3,24 @@ groups:
     description: Application settings
     prefix: APP_
     fields:
-      - name: debug
+      - name: Debug
         type: bool
         description: Enable debug mode
         default: "false"
-      - name: port
+      - name: Port
         type: int
         description: Server port
         required: true
         example: "8080"
-  - name: Database
+  - name: DatabaseConfig
     description: Database settings
     prefix: DB_
     fields:
-      - name: host
+      - name: Host
         type: string
         description: Database host
         default: "localhost"
-      - name: port
+      - name: Port
         type: int
         description: Database port
         default: "5432" 

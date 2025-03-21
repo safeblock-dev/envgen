@@ -28,13 +28,13 @@ groups:
     description: Logger configuration
     type: LoggerConfig
     fields:
-      - name: level
+      - name: Level
         type: LogLevel
         description: Application logging level
         required: true
         default: "info"
       
-      - name: debug_level
+      - name: DebugLevel
         type: LogLevel
         description: Debug logging level
         required: false
@@ -46,13 +46,13 @@ groups:
     description: Main application settings
     type: AppConfig
     fields:
-      - name: metrics_format
+      - name: MetricsFormat
         type: MetricsFormat
         description: Format for metrics export
         required: false
         default: "prometheus"
       
-      - name: internal_metrics_port
+      - name: InternalMetricsPort
         type: int
         description: Internal metrics port
         required: false

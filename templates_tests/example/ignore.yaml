@@ -1,55 +1,39 @@
+types:
+  - name: Environment
+    type: string
+    description: Application environment
+    values: [development, staging, production]
+  - name: Duration
+    type: "time.Duration"
+    description: Duration type
+    import: "time"
+  - name: URL
+    type: "*url.URL"
+    description: URL type
+    import: "net/url"
+
 groups:
-  - name: Postgres
-    description: PostgreSQL database settings
-    prefix: PG_
+  - name: App
+    description: Application settings
     fields:
-      - name: host
+      - name: ENV
+        type: Environment
+        description: Application environment
+        required: true
+        example: "development"
+      - name: Timeout
+        type: Duration
+        description: Operation timeout
+        default: "30s"
+  - name: DatabaseConfig
+    description: Database settings
+    prefix: DB_
+    fields:
+      - name: Host
         type: string
         description: Database host
-        default: localhost
-      - name: port
+        default: "localhost"
+      - name: Port
         type: int
         description: Database port
         default: "5432"
-      - name: user
-        type: string
-        description: Database user
-        required: true
-      - name: password
-        type: string
-        description: Database password
-        required: true
-      - name: dbname
-        type: string
-        description: Database name
-        required: true
-
-  - name: Redis
-    description: Redis cache settings
-    prefix: REDIS_
-    fields:
-      - name: host
-        type: string
-        description: Redis host
-        default: localhost
-      - name: port
-        type: int
-        description: Redis port
-        default: "6379"
-      - name: password
-        type: string
-        description: Redis password
-      - name: db
-        type: int
-        description: Redis database number
-        default: "0"
-
-  - name: Webserver
-    description: Web server configuration
-    fields:
-      - name: postgres
-        type: Postgres
-        description: PostgreSQL configuration
-      - name: redis
-        type: Redis
-        description: Redis configuration

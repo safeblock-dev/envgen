@@ -2,33 +2,42 @@ options:
   go_package: config
 
 groups:
+  - name: Webserver
+    description: Will include App
+    fields:
+      - name: app
+        type: IncludeAppConfig
+        options:
+          go_skip_env_tag: true
+          go_include: true
+
   - name: App
     description: Application settings
     options:
-      go_name: CustomAppConfig
+      go_name: IncludeAppConfig
     fields:
-      - name: debug_mode
+      - name: DebugMode
         type: bool
         description: Enable debug mode
         options:
           go_name: IsDebug
         default: "false"
-      - name: server_port
+      - name: ServerPort
         type: int
         description: Server port
         options:
           go_name: Port
         required: true
         example: "8080"
-  - name: Database
+  - name: DatabaseConfig
     description: Database settings
     options:
       struct_name: DBConfig
     fields:
-      - name: connection_string
+      - name: ConnectionString
         type: string
         description: Database connection string
         options:
           go_name: URL
         required: true
-        example: "postgres://user:pass@localhost:5432/db" 
+        example: "postgres://user:pass@localhost:5432/db"

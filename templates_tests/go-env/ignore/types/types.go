@@ -8,9 +8,9 @@ import (
 	"time"
 )
 
-// AppConfig Application settings
-type AppConfig struct {
-	Env string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
+// App Application settings
+type App struct {
+	ENV string `env:"ENV,required"` // Application environment (Possible values: development, staging, production)
 	Timeout time.Duration `env:"TIMEOUT" envDefault:"30s"` // Operation timeout
 }
 

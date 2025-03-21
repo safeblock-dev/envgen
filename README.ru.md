@@ -50,20 +50,20 @@ groups:
     description: Настройки веб-сервера
     prefix: SERVER_  # Префикс для переменных окружения
     fields:
-      - name: port
+      - name: Port
         type: int
         description: Порт сервера
         default: "8080"
         required: true
         example: "9000"
       
-      - name: host
+      - name: Host
         type: string
         description: Хост сервера
         default: "localhost"
         example: "0.0.0.0"
       
-      - name: env
+      - name: ENV
         type: Environment
         description: Окружение
         default: "development"
@@ -144,7 +144,7 @@ groups:
     options:            # Опциональное: параметры группы
       go_name: DBConfig # Опциональное: любая опция для шаблона
     fields:             # Обязательное: должно быть определено хотя бы одно поле
-      - name: host
+      - name: Host
         type: string
         description: Хост базы данных
         required: true
@@ -157,14 +157,14 @@ groups:
 
 ```yaml
 fields:
-  - name: url                   # Обязательное: имя переменной окружения
+  - name: URL                   # Обязательное: имя переменной окружения
     type: string                # Обязательное: тип поля (встроенный или пользовательский)
     description: API endpoint   # Опциональное: описание поля
     default: "http://127.0.0.1" # Опциональное: значение по умолчанию
     required: true              # Опциональное: является ли поле обязательным
     example: "http://test.com"  # Опциональное: пример значения для документации
     options:                    # Опциональное: дополнительные параметры поля
-      go_name: "URL"            # Опциональное: любая опция для шаблона
+      go_name: "GitURL"         # Опциональное: любая опция для шаблона
 ```
 
 ### Типы
@@ -199,7 +199,7 @@ types:
 
 ```yaml
 fields:
-  - name: github                  
+  - name: Github                  
     type: AppURL                # Указываем имя type
     example: "http://github.com/safeblock-dev" 
   - name: twitter                  
@@ -219,7 +219,7 @@ groups:
     description: Настройки PostgreSQL
     prefix: PG_
     fields:
-      - name: host
+      - name: Host
         type: string
         default: localhost
 
@@ -227,18 +227,16 @@ groups:
     description: Настройки Redis
     prefix: REDIS_
     fields:
-      - name: port
+      - name: Port
         type: int
         default: "6379"
 
   - name: Webserver
     description: Конфигурация веб-сервера
     fields:
-      - name: db
+      - name: DB
         type: Postgres
-        options:
-          name_field: DB
-      - name: cache
+      - name: Cache
         type: Redis
 ```
 
@@ -301,7 +299,7 @@ groups:
     options:
       go_name: CustomAppConfig
     fields:
-      - name: debug_mode
+      - name: DebugMode
         type: bool
         description: Enable debug mode
         options:
@@ -330,37 +328,38 @@ type CustomAppConfig struct {
     options:
       go_skip_env_tag: true
     fields:
-      - name: sentry
+      - name: Sentry
         type: SentryConfig
-      - name: grpc_port
+      - name: GRPC_Port
         type: int
         default: "8002"
-      - name: http_port
+      - name: HTTP_Port
         type: int
         default: "8001"
         options:
-          go_name: HTTP_PORT
+          go_name: HttpPort
           go_tags: env:"NOT_SKIPPED"
     
   - name: CustomEnvTags
     description: Выборочное применение тегов env
     fields:
-      - name: not_skipped
+      - name: NotSkipped
         type: string
       - name: debug
         type: bool
         options:
           go_skip_env_tag: true
-      - name: port
+      - name: Port
         type: int
         options:
           go_skip_env_tag: true
-          go_env_options: skipped
+          go_env_options: will_be_ignored
           go_tags: env:"NOT_SKIPPED,required,notEmpty"
 ```
 
 опции только для полей:
 
+- `go_include` - если true, использует встраивание структур Go (struct embedding)
 - `go_env_options` - позволяет добавить дополнительные опции в тег `env`. Например: `file`, `unset`, `notEmpty` и другие опции. Все опции передаются напрямую в теги без дополнительной валидации.
 - `go_tags` - позволяет добавить дополнительные теги для структуры. Поддерживает указание любых тегов без ограничений. При использовании с пакетом [`env`](github.com/caarlos0/env/v11) часто используются:
   - `envSeparator` - разделитель для слайсов
@@ -369,46 +368,61 @@ type CustomAppConfig struct {
 Пример использования:
 
 ```yaml
-fields:
-  - name: config_path
-    type: string
-    description: Путь к файлу конфигурации
-    required: true
-    options:
-      go_env_options: file  # Проверка существования файла
-    example: "/etc/app/config.json"
-  
-  - name: api_key
-    type: string
-    description: API ключ, который будет очищен после чтения
-    required: true
-    options:
-      go_env_options: unset,notEmpty  # Очистка после чтения и проверка на пустоту
-    example: "secret-key"
-  
-  - name: tags
-    type: "[]string"
-    description: Список тегов с пользовательским разделителем
-    options:
-      go_tags: envSeparator:";"  # Использование ; как разделителя
-    example: "tag1;tag2;tag3"
+groups:
+  - name: Webserver
+    fields:
+      - name: Config
+        type: Config
+        options:
+          go_skip_env_tag: true
+          go_include: true # Встраивание структуры
 
-  - name: labels
-    type: "map[string]string"
-    description: Ключи-значения с пользовательскими разделителями
-    options:
-      go_tags: envSeparator:";" envKeyValSeparator:"="  # Разделители для списка и пар ключ-значение
-    example: "key1=value1;key2=value2"
+      - name: ApiKey
+        type: string
+        description: API ключ, который будет очищен после чтения
+        required: true
+        options:
+          go_env_options: unset,notEmpty  # Очистить после чтения и проверить на пустоту
+        example: "secret-key"
+
+      - name: Tags
+        type: "[]string"
+        description: Список тегов с пользовательским разделителем
+        options:
+          go_tags: envSeparator:";"  # Использовать ; в качестве разделителя
+        example: "tag1;tag2;tag3"
+
+      - name: privateLabels
+        type: "map[string]string"
+        description: Пары ключ-значение с пользовательскими разделителями
+        options:
+          go_tags: envSeparator:";" envKeyValSeparator:"="  # Разделители для списка и пар ключ-значение
+        example: "key1=value1;key2=value2"
+  - name: Config
+    fields:
+      - name: ConfigPath
+        type: string
+        description: Путь к конфигурационному файлу
+        required: true
+        options:
+          go_env_options: file  # Проверить существование файла
+        example: "/etc/app/config.json"
 ```
 
 Результат выполнения:
 
 ```go
-type AppConfig struct {
-	ConfigPath string `env:"APP_CONFIG_PATH,required,file"` // Путь к файлу конфигурации
-	ApiKey string `env:"APP_API_KEY,required,unset,notEmpty"` // API ключ, который будет очищен после чтения
-	Tags []string `env:"APP_TAGS" envSeparator:";"` // Список тегов с пользовательским разделителем
-	Labels map[string]string `env:"APP_LABELS" envSeparator:";" envKeyValSeparator:"="` // Ключи-значения с пользовательскими разделителями
+// Webserver
+type Webserver struct {
+  Config
+  ApiKey        string            `env:"API_KEY,required,unset,notEmpty"`                        // API ключ, который будет очищен после чтения
+  Tags          []string          `env:"TAGS" envSeparator:";"`                                  // Список тегов с пользовательским разделителем
+  privateLabels map[string]string `env:"PRIVATE_LABELS" envSeparator:";" envKeyValSeparator:"="` // Пары ключ-значение с пользовательскими разделителями
+}
+
+// Config
+type Config struct {
+    ConfigPath string `env:"CONFIG_PATH,required,file"` // Путь к конфигурационному файлу
 }
 ```
 
@@ -518,7 +532,7 @@ types:
 2. Используйте его в полях:
 ```yaml
 fields:
-  - name: custom_field
+  - name: CustomField
     type: CustomType
 ```
 
