@@ -1,3 +1,7 @@
+options:
+  go_meta: |
+    // is URL? {{ isURL getTemplatePath }}
+
 groups:
   - name: App
     description: Basic application settings

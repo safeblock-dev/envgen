@@ -1,6 +1,8 @@
 package templates_test
 
 import (
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"testing"
 
@@ -17,6 +19,7 @@ type testCase struct {
 	outputFile   string
 	ignoreTypes  []string
 	ignoreGroups []string
+	fromURL      bool
 }
 
 const (
@@ -28,17 +31,6 @@ func TestTemplates(t *testing.T) {
 	t.Parallel()
 
 	tests := []testCase{
-		// --------------------------------
-		// URL template tests
-		// --------------------------------
-		{
-			name:       "go-env/url",
-			configFile: "go-env/url.yaml",
-			goldenFile: "go-env/url/url.go",
-			template:   "https://raw.githubusercontent.com/safeblock-dev/envgen/main/templates/go-env",
-			outputFile: "go-env/url/url.generated",
-		},
-
 		// --------------------------------
 		// Example template tests (.env)
 		// --------------------------------
@@ -101,6 +93,14 @@ func TestTemplates(t *testing.T) {
 		// --------------------------------
 		// Go-env template tests (Go structs)
 		// --------------------------------
+		{
+			name:       "go-env/url",
+			configFile: "go-env/url.yaml",
+			goldenFile: "go-env/url/url.go",
+			template:   "../templates/go-env",
+			outputFile: "go-env/url/url.generated",
+			fromURL:    true,
+		},
 		{
 			name:       "go-env/basic",
 			configFile: "go-env/basic.yaml",
@@ -336,6 +336,13 @@ func TestTemplates(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
+			if tt.fromURL {
+				server := CreateTestServer(t, tt.template)
+				defer server.Close()
+
+				tt.template = server.URL
+			}
+
 			// Generate file
 			err := envgen.Generate(t.Context(), envgen.Options{
 				ConfigPath:   tt.configFile,
@@ -366,4 +373,20 @@ func TestTemplates(t *testing.T) {
 			require.Equal(t, string(expected), string(actual))
 		})
 	}
+}
+
+// CreateTestServer creates a test server that serves content from a file.
+func CreateTestServer(t *testing.T, filePath string) *httptest.Server {
+	t.Helper()
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Read the file
+		data, _ := os.ReadFile(filePath)
+
+		// Write file content to the response
+		_, _ = w.Write(data)
+	})
+
+	// Create and start test server
+	return httptest.NewServer(handler)
 }
