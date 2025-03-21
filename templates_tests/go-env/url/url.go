@@ -5,7 +5,7 @@
 
 package url
 
-// AppConfig represents Basic application settings
+// AppConfig Basic application settings
 type AppConfig struct {
 	Debug bool `env:"DEBUG" envDefault:"false"` // Enable debug mode
 	Port int `env:"PORT,required"` // Server port
